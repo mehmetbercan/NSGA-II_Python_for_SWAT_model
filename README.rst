@@ -8,11 +8,15 @@ Released: 23-January-2014
 ************
 Introduction
 ************
-Soil and Water Assessment Tool (SWAT) is a conceptual distributed continuous
+**Soil and Water Assessment Tool (SWAT)** is a conceptual distributed continuous
 time model that has capability of running on a daily and sub-daily time step.
 
-Non-Dominated Sorting Genetic Algorithm II (NSGA-II)is a multi-objective
+**Non-Dominated Sorting Genetic Algorithm II (NSGA-II)** is a multi-objective
 optimization algorithm used as an automatic calibration tool in various disciplines.
+
+************
+Setup
+************
 
 **There are Three pythoncodes in this folder:**
 
