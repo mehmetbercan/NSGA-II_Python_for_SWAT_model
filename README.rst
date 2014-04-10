@@ -38,5 +38,6 @@ Setup
 
 
 Now, you can start code by running NSGA-II_Bekele_Cloud.py.
-For more information, please contact with **Mehmet Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu
+If you encounter any problems or have suggestions for the future development, 
+please contact **Mehmet Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
 
