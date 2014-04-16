@@ -1,7 +1,7 @@
 #################################
 NSGA-II for SWAT Watershed Model
 #################################
-nsga2 1.0.0
+nsga2sw 1.0
 
 Released: 23-January-2014
 
@@ -21,8 +21,8 @@ Setup
 **There are Three pythoncodes in this folder:**
 
 * **Extract_rch.py:** Extracts output.rch file based on *"./NSGA2.IN/observed_rch.txt"* file.
-* **SWAT_ParameterEdit.py:** Edits SWAT parameters based on *"./model.in"* file using Backup folder for default SWAT parameter values. 
-* **NSGA-II_Bekele_Cloud.py:** Runs the NSGA-II for SWAT model. When running, it uses *"./nsga2_mid.cmd"* file and produces *"./model.in"* file for parameter values.
+* **SWAT_ParameterEdit.py:** Edits SWAT parameters based on *"./model.in"* file and uses *"./Backup"* folder for default SWAT parameter values. 
+* **NSGA-II_Bekele_Cloud.py:** Runs the NSGA-II for SWAT model. It uses *"./nsga2_mid.cmd"* file and produces *"./model.in"* for internal use of parameter editing.
     
 
 
@@ -35,9 +35,11 @@ Setup
   * **nsga2_par.def file:** Defines parameters to be calibrated and their constrains.Currently there are 24 flow parameters can be calibrated.
   * **observed_rch.txt file:** This file contains observation data. When there is missing data,it should not be included in this file. Column one is the squential numbers which should jump when there is missing data (e.g. 3,4,7,8,9,10 where the data for 1,2,5 and 6'th days are missing).
 
+*  Start code by running NSGA-II_Bekele_Cloud.py.
 
 
-Now, you can start code by running NSGA-II_Bekele_Cloud.py.
+Visit `my website <http://mehmetbercan.com/research/researchCal.html>`_ for more information.
+
 If you encounter any problems or have suggestions for the future development, 
 please contact **Mehmet Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
 
