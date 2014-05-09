@@ -21,6 +21,7 @@ def MainNSGA2():
     parname,popsize,gener,pcross,optype,seed,M,FuncOpt,ReadMFrmOut,nchrom,vlen,chrom,lim_b,pmut_b,Outlet_Obsdata,nfunc=ReadInput()
 
     #Open Plot file
+    if not os.path.exists(r'./NSGA2.OUT' ): os.makedirs(r'./NSGA2.OUT')
     Plot = open("./NSGA2.OUT/plot.out","w"); #("plot.out","w");
     Plot.writelines("# Feasible and Non-dominated Objective Vector\n");
 
