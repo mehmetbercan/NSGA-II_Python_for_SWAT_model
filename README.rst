@@ -40,9 +40,9 @@ Setup
 
 *  Definition of model Outputs in *"./NSGA2.OUT"* folder.
 
-* **Output.out file:** Contains all results starting from first generation to last generation.
-* **Plot.out file:** Contains fitness results from the population of last generation (pareto front).
-* **g_rank_record.out file:** Related with NSGA-II recods.
+  * **Output.out file:** Contains all results starting from first generation to last generation.
+  * **Plot.out file:** Contains fitness results from the population of last generation (pareto front).
+  * **g_rank_record.out file:** Related with NSGA-II recods.
 
 
 If you encounter any problems or have suggestions for the future development, 
