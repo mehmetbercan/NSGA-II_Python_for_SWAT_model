@@ -38,7 +38,8 @@ Setup
 *  Start code by running NSGA-II_Bekele_Cloud.py.
 
 
-**Model Output**
+**Model Output:**
+
 In this section, the output files will be explained to make users familiar with them. At the end of this section, the example output files will be used for demonstration purposes.
 
 *  Output.out:
