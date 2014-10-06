@@ -44,10 +44,11 @@ Setup
   * **Plot.out file:** Contains fitness results from the population of last generation (pareto front).
   * **g_rank_record.out file:** Related with NSGA-II recods.
 
+Visit `my website <http://mehmetbercan.com/research/researchCal.html>`_ for more information.
 
 If you encounter any problems or have suggestions for the future development, 
 please contact **Mehmet B. Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
 
-`mehmetbercan.com <http://mehmetbercan.com/research/researchCal.html>`_.
+
 
 
