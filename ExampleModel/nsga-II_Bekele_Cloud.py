@@ -307,22 +307,21 @@ def func(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname, generation):
 
     popsize = len(population["ind"])
     nfunc = len(population["ind"][0]["fitness"])
+    nchrom = len(population["ind"][0]["xbin"])
 
-    i=0;
     ParameterValues=[]
-    while i < popsize:
+    for i in xrange(popsize):
         ParameterValues.append(population["ind"][i]["xbin"]) #/* problem variables */
-        i+=1
 
     #&&&& without pralel SWAT run &&&&&
     outlets = Outlet_Obsdata.keys()
     outlets.sort()
-    for i in xrange(len(ParameterValues)): #population loop
+    for i in xrange(popsize): #population loop
         print "\n"*5,"-"*45,"\nGeneration: ", generation, "  Simulation: ", i+1, "\n", "-"*45
         #Print parameter set in model.in file
         modelinf = open(".\model.in","w")
         writeline =''
-        for j in xrange(len(ParameterValues[i])): #parameter loop
+        for j in xrange(nchrom): #parameter loop
             writeline += parname[j]+'\t'+str(ParameterValues[i][j])+'\n'       
         modelinf.writelines(writeline)
         modelinf.close()
@@ -395,16 +394,16 @@ def func(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname, generation):
         nobjsite_=len(outlets)
         newobjectivefuncs=[]
         if FuncOptAvr==1: #Average Objective sites
-            for i in range(0,nobjfunc_):
+            for k in range(0,nobjfunc_):
                 objfuncav=0
                 for j in range(0,nobjsite_):
-                    objfuncav+=objectivefuncs[(i+j*nobjfunc_)]/nobjsite_
+                    objfuncav+=objectivefuncs[(k+j*nobjfunc_)]/nobjsite_
                 newobjectivefuncs.append(objfuncav)  
         elif FuncOptAvr==2: #Average Objective Functions
-            for i in range(0,nobjsite_):
+            for k in range(0,nobjsite_):
                 objsiteav=0
                 for j in range(0,nobjfunc_):
-                    objsiteav+=objectivefuncs[(i*nobjfunc_+j)]/nobjfunc_
+                    objsiteav+=objectivefuncs[(k*nobjfunc_+j)]/nobjfunc_
                 newobjectivefuncs.append(objsiteav)             
         else: #Do not average
             newobjectivefuncs = objectivefuncs
