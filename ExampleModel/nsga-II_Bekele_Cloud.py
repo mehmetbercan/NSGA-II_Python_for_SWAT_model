@@ -18,7 +18,7 @@ def MainNSGA2():
     print "    Author: Mehmet B. Ercan (mehmetbercan@gmail.com) at USC/Columbia, SC USA"
     
     #Read Input file
-    parname,popsize,gener,pcross,optype,seed,M,FuncOpt,ReadMFrmOut,nchrom,vlen,chrom,lim_b,pmut_b,Outlet_Obsdata,nfunc=ReadInput()
+    parname,popsize,gener,pcross,optype,seed,M,FuncOpt,FuncOptAvr,ReadMFrmOut,nchrom,vlen,chrom,lim_b,pmut_b,Outlet_Obsdata,nfunc=ReadInput()
 
     #Open Plot file
     if not os.path.exists(r'./NSGA2.OUT' ): os.makedirs(r'./NSGA2.OUT')
@@ -88,7 +88,7 @@ def MainNSGA2():
         shutil.copy2("./NSGA2.OUT/output.out", "./NSGA2.OUT/output_previous.out")
         Output = open("./NSGA2.OUT/output.out","w");
         #/*Function Calculaiton*/
-        func(old_pop_ptr,Outlet_Obsdata,FuncOpt,parname,"Previous NSGA-II run Last Population")
+        func(old_pop_ptr,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname,"Previous NSGA-II run Last Population")
         
     else:
         #Open output file
@@ -113,7 +113,7 @@ def MainNSGA2():
                 InitialLHSpop["ind"][i]["xbin"][j] = LHSamples[j][rndinteger]
 
         #/*Function Calculaiton*/
-        func(InitialLHSpop,Outlet_Obsdata,FuncOpt,parname,"LHS")
+        func(InitialLHSpop,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname,"LHS")
 
         #Select the first population from InitialLHSpop
         n=0
@@ -152,7 +152,7 @@ def MainNSGA2():
 
         #/*----------FUNCTION EVALUATION-----------*/
         #-----------------------------------------------------
-        func(new_pop_ptr,Outlet_Obsdata,FuncOpt,parname,i+1); #------ MAIN PART FOR SWAT RUN ----
+        func(new_pop_ptr,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname,i+1); #------ MAIN PART FOR SWAT RUN ----
         #-----------------------------------------------------
 
         #/*-------------------SELECTION KEEPING FRONTS ALIVE--------------*/
@@ -222,9 +222,11 @@ def ReadInput():
     seed = float(lines[7].split()[1]) #random seed(between 0 and 1)
     M = int(lines[8].split()[1])       #Number of Latin Hypercube Sampling intervals
     FuncOpt = int(lines[9].split()[1]) #1=E; 2=R^2; 3=E,log E; 4=E,R^2,log E; 5=E,PB
-    ReadMFrmOut = int(lines[10].split()[1]) #1= Read last population from output.out (use "1" when you want to re-start with same parameters defined in parameter file)
+    FuncOptAvr = int(lines[10].split()[1]) #0=Do not average; 1=Average Objective sites; 2=Average Objective Functions
+    ReadMFrmOut = int(lines[11].split()[1]) #1= Read last population from output.out (use "1" when you want to re-start with same parameters defined in parameter file)
     f.close()
-    
+    #print "popsize,gener,pcross,optype,bits,pmutprp,seed,M,FuncOpt,FuncOptAvr,ReadMFrmOut"
+    #print popsize,gener,pcross,optype,bits,pmutprp,seed,M,FuncOpt,FuncOptAvr,ReadMFrmOut
     #Read 'nsga2_par.def'
     f = open("./NSGA2.IN/nsga2_par.def", "r")
     lines = f.readlines(); nchrom=0;
@@ -262,14 +264,17 @@ def ReadInput():
     nfunc = 0 #no. of objective functions
     nsites = int(lines[0].split("  ")[0])
     if FuncOpt==1 or FuncOpt==2:
-        nfunc = nsites
+        nfunc = nsites            
     if FuncOpt==3 or FuncOpt==5:
         nfunc = 2*nsites
     if FuncOpt==4:
         nfunc = 3*nsites
+    if FuncOptAvr==1:
+        nfunc=nfunc/nsites
+    if FuncOptAvr==2:
+        nfunc=nsites
     f.close()
-    
-    return parname,popsize,gener,pcross,optype,seed,M,FuncOpt,ReadMFrmOut,nchrom,vlen,chrom,lim_b,pmut_b,Outlet_Obsdata,nfunc
+    return parname,popsize,gener,pcross,optype,seed,M,FuncOpt,FuncOptAvr,ReadMFrmOut,nchrom,vlen,chrom,lim_b,pmut_b,Outlet_Obsdata,nfunc
 #-------------------------------------------------------------------------------
 
 
@@ -296,7 +301,7 @@ def ReadInput():
 
 #-------------------------------------------------------------------------------
 #This is the program used to evaluate the value of the function
-def func(population,Outlet_Obsdata,FuncOpt,parname, generation):
+def func(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname, generation):
     #/*Initializing the max rank to zero*/
     population["maxrank"]=0
 
@@ -381,8 +386,30 @@ def func(population,Outlet_Obsdata,FuncOpt,parname, generation):
                 objectivefuncs.append(E0best)
                 objectivefuncs.append(LE0best)
                 objectivefuncs.append(R20best)  
+        #Average objective functions
+        nobjfunc_=1
+        if FuncOpt==3 or FuncOpt==5:
+            nobjfunc_=2
+        if FuncOpt==4:
+            nobjfunc_=3
+        nobjsite_=len(outlets)
+        newobjectivefuncs=[]
+        if FuncOptAvr==1: #Average Objective sites
+            for i in range(0,nobjfunc_):
+                objfuncav=0
+                for j in range(0,nobjsite_):
+                    objfuncav+=objectivefuncs[(i+j*nobjfunc_)]/nobjsite_
+                newobjectivefuncs.append(objfuncav)  
+        elif FuncOptAvr==2: #Average Objective Functions
+            for i in range(0,nobjsite_):
+                objsiteav=0
+                for j in range(0,nobjfunc_):
+                    objsiteav+=objectivefuncs[(i*nobjfunc_+j)]/nobjfunc_
+                newobjectivefuncs.append(objsiteav)             
+        else: #Do not average
+            newobjectivefuncs = objectivefuncs
         #Add objective functions to population
-        population["ind"][i]['fitness'] = objectivefuncs
+        population["ind"][i]['fitness'] = newobjectivefuncs
     #&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
     #/*---------------------------* RANKING *------------------------------*/
