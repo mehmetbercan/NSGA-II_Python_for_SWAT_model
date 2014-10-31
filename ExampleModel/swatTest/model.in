@@ -1,0 +1,8 @@
+v__CH_K2.rte	0.0
+v__ESCO.hru	0.0
+v__CANMX.hru	0.0
+r__SOL_AWC().sol	-0.25
+v__RCHRG_DP.gw	0.0
+a__GWQMN.gw	-1000.0
+r__SOL_Z().sol	-0.25
+v__CH_N2.rte	0.0
