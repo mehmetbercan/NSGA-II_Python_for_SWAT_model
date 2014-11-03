@@ -152,7 +152,7 @@ class nsga2:
             #Write values in old_pop_ptr
             for i in xrange(self.popsize):
                 for j in xrange(self.nchrom):
-                    old_pop_ptr["ind"][i]["xbin"][j] = LastGenPars[0][j]
+                    old_pop_ptr["ind"][i]["xbin"][j] = LastGenPars[i][j]
             #Copy old output file
             shutil.copy2(self.SWATdir+"/NSGA2.OUT/output.out", self.SWATdir+"/NSGA2.OUT/output_previous.out")            
             #/*Function Calculaiton*/
