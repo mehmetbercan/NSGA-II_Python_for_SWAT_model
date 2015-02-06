@@ -1,5 +1,6 @@
 #Creates Mutated population (non-dominating sorting and crowding distance functions)
 import numpy
+from math import floor
 
 #-------------------------------------------------------------------------------
 #/*This program subroutine is used to print the report*/
@@ -88,15 +89,6 @@ def report(pop1_ptr,pop2_ptr,igen,ngen,SWATdir,ncross,nmut):
 #-------------------------------------------------------------------------------
 
 
-#-------------------------------------------------------------------------------
-def indzeros(chrom):
-    indvdl = {}
-    indvdl["genes"]=numpy.zeros(chrom,int)#/*bianry chromosome*/
-    indvdl["rank"]=0      #/*Rank of the individual*/
-    indvdl["cub_len"]=0.0 #/*crowding distance of the individual*/
-    return indvdl
-#-------------------------------------------------------------------------------
-
 
 
 #decode--------------------------------------------------------------------------
@@ -183,8 +175,72 @@ def CreateDefaultPopulation(popsize,chrom,nchrom,nfunc):
 
 
 
-#crossover------------------------------------------------------------------------
-def crossover(new_pop_ptr,mate_pop_ptr,warmup_random,pcross,ncross):
+#Selection----------------------------------------------------------------------
+#/*This is the function to get the different individuals selected*/
+"""All mate_pop_ptr members are updated. Selection() selects two random member from old_pop_ptr and
+puts best one based on ranking ("rank") and crowding distance ("cub_len") to mate_pop_ptr untill all mate_pop_ptr filled."""
+def indzeros(chrom): #Creates individual with "genes", "rank" and "cub_len" with zero values. genes= a parameter set in a binary form, cub_len=crowding distance
+    indvdl = {}
+    indvdl["genes"]=numpy.zeros(chrom,int)#/*bianry chromosome*/
+    indvdl["rank"]=0      #/*Rank of the individual*/
+    indvdl["cub_len"]=0.0 #/*crowding distance of the individual*/
+    return indvdl
+
+def Selection(old_pop_ptr,pop2_ptr,warmup_random): #nselect() in deb's c code #select solutions from old population to the mate population. All members on mate population updated.
+    popsize = len(old_pop_ptr["ind"])
+    chrom = len(old_pop_ptr["ind"][0]['genes']) #chrom=number of bits of a parameter set
+
+    r = popsize;
+    s = chrom;
+
+    indZeros = indzeros(chrom)
+
+    k=-1;
+    for n in xrange(popsize):
+        k+=1
+        j=0;j1 = 0;
+
+        rnd2 = warmup_random.randomperc();
+        rnd2 = popsize*rnd2;
+        rnd = int(floor(rnd2));
+        if(rnd == 0):rnd = popsize - k;
+        if(rnd == popsize):rnd = abs(popsize-2)/2;
+
+        # /*Select first parent randomly*/
+        if rnd <= 0:j = indZeros #The population has max individual members in the c code but not here so last item there is zero
+        else:j = old_pop_ptr["ind"][rnd-1];
+
+        rnd2 = warmup_random.randomperc();
+        rnd2 = popsize * rnd2;
+        rnd1 = int(floor(rnd2));
+        if (rnd1 == 0):rnd1 = popsize - n;
+        if(rnd1 == popsize):rnd1 = abs(popsize - 4)/2;
+
+        #/*Select second parent randomly*/
+        if rnd1 <= 0:j1 = indZeros #The population has max individual members in the c code but not here so last item there is zero
+        else:j1 = old_pop_ptr["ind"][rnd1-1];
+
+        s1_ptr = j["genes"][:];
+        fit_ptr1 = j["rank"];
+        f1_ptr = j["cub_len"];
+
+        s2_ptr = j1["genes"][:];
+        fit_ptr2 = j1["rank"];
+        f2_ptr = j1["cub_len"];
+
+    #/*---SELECTION PROCEDURE---*/
+      #/*Comparing the fitnesses*/
+        if(fit_ptr1 > fit_ptr2):pop2_ptr["ind"][k]["genes"][:] = s2_ptr[:];
+        elif(fit_ptr1 < fit_ptr2):pop2_ptr["ind"][k]["genes"][:]=s1_ptr[:];
+        elif(f1_ptr < f2_ptr):pop2_ptr["ind"][k]["genes"][:] = s2_ptr[:];
+        else:pop2_ptr["ind"][k]["genes"][:] = s1_ptr[:];
+    return
+#Selection----------------------------------------------------------------------
+
+
+
+#Crossover------------------------------------------------------------------------
+def crossover(new_pop_ptr,mate_pop_ptr,warmup_random,pcross,ncross): #New population changes based on mate population
     popsize = len(new_pop_ptr["ind"])
     chrom = len(new_pop_ptr["ind"][0]["genes"])
 
@@ -260,8 +316,36 @@ def unicross(new_pop_ptr, mate_pop_ptr,warmup_random,pcross,ncross):
         i+=1
 
     return ncross;
-#crossover-------------------------------------------------------------------------
+#Crossover-------------------------------------------------------------------------
 
+
+
+#Mutation----------------------------------------------------------------------
+#/* This is the module used to formulate the mutation routine*/
+def Mutation(new_pop_ptr,warmup_random,pmut_b,nmut): #mutate() in deb's c code #New population mutates
+    popsize = len(new_pop_ptr["ind"])
+    chrom = len(new_pop_ptr["ind"][0]["genes"])
+
+    rand1=warmup_random.randomperc();
+
+    j=0
+    while j < popsize:
+        #/*Select bit */
+        i=0
+        while i < chrom:
+            rand1 = warmup_random.randomperc();
+
+            #/*Check whether to do mutation or not*/
+            if(rand1 <= pmut_b):
+                if(new_pop_ptr['ind'][j]['genes'][i] == 0):
+                    new_pop_ptr['ind'][j]['genes'][i] =1;
+                else:
+                    new_pop_ptr['ind'][j]['genes'][i]=0;
+                nmut+=1;
+            i+=1
+        j+=1
+    return nmut;
+#Mutation-----------------------------------------------------------------------
 
 
 
@@ -472,7 +556,8 @@ def CrowdingDistance(rnk,popsize,nfunc,globalpop,fpara1):#gshare
     return;
 
 
-
+#/*-------------------SELECTION KEEPING FRONTS ALIVE--------------*/
+#/*Elitism And Sharing Implemented*/ #### Nondominated sorting, crowding distances
 def CreateMatePopFromNewandOldPops(pop1_ptr,pop2_ptr,pop3_ptr,gen): #keepaliven
     popsize = len(pop1_ptr["ind"])
     chrom = len(pop1_ptr["ind"][0]["genes"])

@@ -10,14 +10,25 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
-import copy, sys, numpy, os, random, shutil, nsga2funcs, SWATnsga2funcs
+'''
+P.S: Old population (old_pop_ptr) is a parent population, new population (new_pop_ptr)
+is a child population and mate population (mate_pop_ptr) is an intermediate population between
+transactions. General process starts with an old population which goes through selection to
+create mate population which is then used to form a new population through crossover. This
+new population goes through mutation to get final new population. Then, new and old populations
+go through elitism, crowding distances, nondominated sorting to create a mate population.
+This mate population then copied as an old population for the next generation. The same porcess
+repeats for every generation.
+'''
+
+import copy, sys, numpy, os, random, shutil, nsga2utilities, SWATutilities
 from math import floor
 
 class nsga2:
     def __init__(self,SWATtxtinoutFolderDirectory):
         """nsga2 calibration functions"""
         """SWATtxtinout folder should have 'nsga.in' subfolder with nsga2 input files"""
-        libpath = os.path.dirname(nsga2funcs.__file__)
+        libpath = os.path.dirname(nsga2utilities.__file__)
         #Copy necessary files to SWAT directory
         shutil.copy2(libpath+"/ScriptsForSWATtxt/Extract_rch.py", SWATtxtinoutFolderDirectory)
         shutil.copy2(libpath+"/ScriptsForSWATtxt/nsga2_mid.cmd", SWATtxtinoutFolderDirectory)
@@ -30,7 +41,7 @@ class nsga2:
         f = open(nsga2def, "r")
         lines = f.readlines()
         popsize = int(lines[1].split()[1]) #Population size (an even no.)
-        gener = int(lines[2].split()[1]) #the no.of generations
+        ngener = int(lines[2].split()[1]) #the no.of generations
         pcross = float(lines[3].split()[1]) #the cross-over probability (between 0.5 and 1)
         optype = int(lines[4].split()[1]) #Crossover type 1 for Simple one & 2 for Uniform X-over
         bits = int(lines[5].split()[1])  #No.of bits assigned to each variable(parameters)
@@ -41,8 +52,6 @@ class nsga2:
         FuncOptAvr = int(lines[10].split()[1]) #0=Do not average; 1=Average Objective sites; 2=Average Objective Functions
         ReadMFrmOut = int(lines[11].split()[1]) #1= Read last population from output.out (use "1" when you want to re-start with same parameters defined in parameter file)
         f.close()
-        #print "popsize,gener,pcross,optype,bits,pmutprp,seed,M,FuncOpt,FuncOptAvr,ReadMFrmOut"
-        #print popsize,gener,pcross,optype,bits,pmutprp,seed,M,FuncOpt,FuncOptAvr,ReadMFrmOut
         #Read 'nsga2_par.def'
         f = open(nsga2pardef, "r")
         lines = f.readlines(); nchrom=0;
@@ -59,8 +68,6 @@ class nsga2:
             lim_b.append([float(lines[i+1].split()[1]),float(lines[i+1].split()[2])]) #lower & the upper limits of the %d variable\n"%(i+1)
         pmut_b = pmutprp * 1.0/chrom #the mutation probability for binary strings (between 0 and 1.0/chrom)
         f.close()
-
-        #---Thinking if observations are not all rch file. I will incorporate the others later.-----------------------------------------------------------------------------------------------------------------
         #Read 'observed_rch.txt'
         f = open(observed_rch, "r")
         lines = f.readlines()
@@ -92,7 +99,7 @@ class nsga2:
         f.close()
         self.parname=parname
         self.popsize=popsize
-        self.gener=gener
+        self.ngener=ngener
         self.pcross=pcross
         self.optype=optype
         self.seed=seed
@@ -111,19 +118,20 @@ class nsga2:
         #---
         self.nmut=0
         self.ncross=0
-        self.old_pop_ptr=nsga2funcs.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
-        self.new_pop_ptr=nsga2funcs.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
-        self.mate_pop_ptr=nsga2funcs.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
+        self.old_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
+        self.new_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
+        self.mate_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
         #/*Initialize the random no generator*/
         self.warmup_random = random_(seed); #
-        #-------------------------------------------------------------------------------
+    #-------------------------------------------------------------------------------
 
-    def DetermineInitialPopulation(self):
+
+    #-------------------------------------------------------------------------------
+    def CreateInitialPopulation(self):
         old_pop_ptr=self.old_pop_ptr
         #Check if NSGA2.OUT exist
         if not os.path.exists(self.SWATdir+"/NSGA2.OUT"): os.makedirs(self.SWATdir+"/NSGA2.OUT")
-        
-        #-------------------------------- INITIAL POPULATION DETERMINATION ----------------------------------------    
+       
         #Define the the initital population
         if self.ReadMFrmOut == 1:#Read Last population from output.out
             #Read outputout
@@ -156,11 +164,11 @@ class nsga2:
             #Copy old output file
             shutil.copy2(self.SWATdir+"/NSGA2.OUT/output.out", self.SWATdir+"/NSGA2.OUT/output_previous.out")            
             #/*Function Calculaiton*/
-            SWATnsga2funcs.CalculateObjectiveFunctions(old_pop_ptr,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"Previous NSGA-II run Last Population",self.SWATdir)
+            SWATutilities.CalculateObjectiveFunctions(old_pop_ptr,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"Previous NSGA-II run Last Population",self.SWATdir)
             
         else:
             #Defining Latin Hypercube Sampling population
-            InitialLHSpop = nsga2funcs.CreateDefaultPopulation(self.M,self.chrom,self.nchrom,self.nfunc)
+            InitialLHSpop = nsga2utilities.CreateDefaultPopulation(self.M,self.chrom,self.nchrom,self.nfunc)
             #Latin Hypercube Samples
             LHSamples = []
             for j in xrange(len(self.lim_b)):
@@ -178,7 +186,7 @@ class nsga2:
                     rndinteger = int(round(self.M*random.random(),0))
                     InitialLHSpop["ind"][i]["xbin"][j] = LHSamples[j][rndinteger]         
             #/*Function Calculaiton*/
-            SWATnsga2funcs.CalculateObjectiveFunctions(InitialLHSpop,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"LHS",self.SWATdir)
+            SWATutilities.CalculateObjectiveFunctions(InitialLHSpop,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"LHS",self.SWATdir)
             #Select the first population from InitialLHSpop
             n=0
             for rank in range(1,self.M+1):
@@ -191,101 +199,34 @@ class nsga2:
                             break
                 else:continue
                 break
-        nsga2funcs.reverse_decode(old_pop_ptr,self.vlen,self.lim_b)
-        SWATnsga2funcs.rankcon(old_pop_ptr)
+        nsga2utilities.reverse_decode(old_pop_ptr,self.vlen,self.lim_b)
+        SWATutilities.rankcon(old_pop_ptr)
         self.old_pop_ptr=old_pop_ptr
-        #-------------------------------- INITIAL POPULATION DETERMINATION ----------------------------------------
+    #-------------------------------------------------------------------------------
 
 
     #-------------------------------------------------------------------------------
-    #/*This is the file to get the different individuals selected*/
-    def Selection(self):
-        old_pop_ptr=self.old_pop_ptr; pop2_ptr=self.mate_pop_ptr; warmup_random=self.warmup_random
-        popsize = len(old_pop_ptr["ind"])
-        chrom = len(old_pop_ptr["ind"][0]['genes'])
-
-        r = popsize;
-        s = chrom;
-
-        indZeros = nsga2funcs.indzeros(chrom)
-
-        k=-1;
-        for n in xrange(popsize):
-            k+=1
-            j=0;j1 = 0;
-
-            rnd2 = warmup_random.randomperc();
-            rnd2 = popsize*rnd2;
-            rnd = int(floor(rnd2));
-            if(rnd == 0):rnd = popsize - k;
-            if(rnd == popsize):rnd = abs(popsize-2)/2;
-
-            # /*Select first parent randomly*/
-            if rnd <= 0:j = indZeros #The population has max individual members in the c code but not here so last item there is zero
-            else:j = old_pop_ptr["ind"][rnd-1];
-
-            rnd2 = warmup_random.randomperc();
-            rnd2 = popsize * rnd2;
-            rnd1 = int(floor(rnd2));
-            if (rnd1 == 0):rnd1 = popsize - n;
-            if(rnd1 == popsize):rnd1 = abs(popsize - 4)/2;
-
-            #/*Select second parent randomly*/
-            if rnd1 <= 0:j1 = indZeros #The population has max individual members in the c code but not here so last item there is zero
-            else:j1 = old_pop_ptr["ind"][rnd1-1];
-
-            s1_ptr = j["genes"][:];
-            fit_ptr1 = j["rank"];
-            f1_ptr = j["cub_len"];
-
-            s2_ptr = j1["genes"][:];
-            fit_ptr2 = j1["rank"];
-            f2_ptr = j1["cub_len"];
-
-        #/*---SELECTION PROCEDURE---*/
-          #/*Comparing the fitnesses*/
-            if(fit_ptr1 > fit_ptr2):pop2_ptr["ind"][k]["genes"][:] = s2_ptr[:];
-            elif(fit_ptr1 < fit_ptr2):pop2_ptr["ind"][k]["genes"][:]=s1_ptr[:];
-            elif(f1_ptr < f2_ptr):pop2_ptr["ind"][k]["genes"][:] = s2_ptr[:];
-            else:pop2_ptr["ind"][k]["genes"][:] = s1_ptr[:];
-        self.old_pop_ptr=old_pop_ptr; self.mate_pop_ptr=pop2_ptr; self.warmup_random=warmup_random
-        return
-
-    #/*CROSSOVER----------------------------*/
-    def Crossover(self):
+    def CreateChildPopulation(self):
+        #Selection
+        nsga2utilities.Selection(self.old_pop_ptr,self.mate_pop_ptr,self.warmup_random)
+        #Crossover
         if(self.optype == 1): #/*Binary Cross-over*/
-            self.ncross = nsga2funcs.crossover(self.new_pop_ptr,self.mate_pop_ptr,self.warmup_random,self.pcross,self.ncross);
+            self.ncross = nsga2utilities.crossover(self.new_pop_ptr,self.mate_pop_ptr,self.warmup_random,self.pcross,self.ncross);
 
         if(self.optype == 2):#/*Binary Uniform Cross-over*/
-            self.ncross = nsga2funcs.unicross(self.new_pop_ptr ,self.mate_pop_ptr,self.warmup_random,self.pcross,self.ncross);
-    #-------------------------------------------------------------------------------
-    #/* This is the module used to formulate the mutation routine*/
-    def Mutation(self):
-        rand1=self.warmup_random.randomperc();
-        j=0
-        while j < self.popsize:
-            #/*Select bit */
-            i=0
-            while i < self.chrom:
-                rand1 = self.warmup_random.randomperc();
-
-                #/*Check whether to do mutation or not*/
-                if(rand1 <= self.pmut_b):
-                    if(self.new_pop_ptr['ind'][j]['genes'][i] == 0):
-                        self.new_pop_ptr['ind'][j]['genes'][i] =1;
-                    else:
-                        self.new_pop_ptr['ind'][j]['genes'][i]=0;
-                    self.nmut+=1;
-                i+=1
-            j+=1
-        return;
+            self.ncross = nsga2utilities.unicross(self.new_pop_ptr ,self.mate_pop_ptr,self.warmup_random,self.pcross,self.ncross);
+        #Mutation
+        self.nmut = nsga2utilities.Mutation(self.new_pop_ptr,self.warmup_random,self.pmut_b,self.nmut)
     #-------------------------------------------------------------------------------
     
-    #/*-------------------SELECTION KEEPING FRONTS ALIVE--------------*/
-    #/*Elitism And Sharing Implemented*/ #### Nondominated sorting, crowding distances
-    def CreateMatePopulation(self,generationNo):
-        nsga2funcs.CreateMatePopFromNewandOldPops(self.old_pop_ptr ,self.new_pop_ptr ,self.mate_pop_ptr,generationNo)
-
+    #-------------------------------------------------------------------------------
+    def CreateParentPopulation(self,generationNo):
+        nsga2utilities.CreateMatePopFromNewandOldPops(self.old_pop_ptr ,self.new_pop_ptr ,self.mate_pop_ptr,generationNo)
+        nsga2utilities.decode(self.mate_pop_ptr, self.vlen, self.lim_b);
+        nsga2utilities.report(self.old_pop_ptr,self.mate_pop_ptr,generationNo,self.ngener,self.SWATdir,self.ncross,self.nmut); #Print Report: old_pop_ptr is old population and mate_pop_ptr is here the created old population for next generation
+        self.new_pop_ptr = copy.deepcopy(self.mate_pop_ptr); 
+        self.old_pop_ptr = copy.deepcopy(self.new_pop_ptr); #Parent Population
+    #-------------------------------------------------------------------------------
 
 
 

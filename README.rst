@@ -1,7 +1,7 @@
 #################################
 NSGA-II for SWAT Watershed Model
 #################################
-nsga2sw 2.0
+nsga2sw 2.1
 
 Released: 31-October-2014
 
