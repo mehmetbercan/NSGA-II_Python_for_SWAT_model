@@ -62,7 +62,7 @@ Although above procedure is enough to run NSGA-II, this section explains how to 
 *  Right click "GLUE_run.bat" file and click "edit"
 
   * Delete everything and paste the entire directory for *"ExampleTest.py"*, *"CreateGlueFiles4VisualizationInSWAT-CUP.py"* and *"MoveGlueFilesInCorrespondingSWAT-CUPfolder.py"*. This will tell the SWAT-CUP to run the NSGA-II instead of GLUE  in the NSGA-II directories, turn the results in to the GLUE format and move them into SWAT-CUP GLUE directories. 
-  * Make sure the Python inputs (the SWAT and SWAT-CUP directories) for NSGA-II and GLUE folders are correctly set in *"ExampleTest.py"*, *"CreateGlueFiles4VisualizationInSWAT-CUP.py"* and *"MoveGlueFilesInCorrespondingSWAT-CUPfolder.py"* files.
+  * Make sure the Python inputs (the SWAT and SWAT-CUP directories) for NSGA-II and GLUE folders are correctly set in *"ExampleTest.py"*, *"CreateGlueFiles4VisualizationInSWAT-CUP.py"* and *"MoveGlueFilesInCorrespondingSWAT-CUPfolder.py"* files (the last two are located under "ExternalPythonScripts" folder).
 
 *  Click on "Calibrate..." (green gear shape) on the upper menu and click on "GLUE_run.bat"
 
