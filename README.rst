@@ -46,11 +46,36 @@ Setup
   * **Plot.out file:** Contains fitness results from the population of last generation (pareto front).
   * **g_rank_record.out file:** Related with NSGA-II recods.
 
+
+**Running NSGA-II in SWAT-CUP:** 
+
+Although above procedure is enough to run NSGA-II, this section explains how to run it in SWAT-CUP. This calibration tool is designed in a way to migrate into SWAT-CUP with an only need to add the NSGA-II calibration method to SWAT-CUP interface. The procedure bellow is not final intent but it is a way around to run NSGA-II in SWAT-CUP. 
+
+*  Follow the above procedure but do not run (*"ExampleModel/ExampleTest.py"* )
+
+*  Open SWAT-CUP and create a new GLUE project by following instruction within the interface
+
+  * The "SWATtxtinout" used during this process is only for creating SWAT-CUP GLUE project and will not be used for any other purposes. Thus, using a small size model here would be faster.
+
+*  Under SWAT-CUP "Project Explorer", extend "Executable Files" and right Click on "GLUE_run.bat" to open "item location"
+
+*  Right click "GLUE_run.bat" file and click "edit"
+
+  * Delete everything and paste the entire directory for *"ExampleTest.py"*, *"CreateGlueFiles4VisualizationInSWAT-CUP.py"* and *"MoveGlueFilesInCorrespondingSWAT-CUPfolder.py"*. This will tell the SWAT-CUP to run the NSGA-II instead of GLUE  in the NSGA-II directories, turn the results in to the GLUE format and move them into SWAT-CUP GLUE directories. 
+  * Make sure the Python inputs (the SWAT and SWAT-CUP directories) for NSGA-II and GLUE folders are correctly set in *"ExampleTest.py"*, *"CreateGlueFiles4VisualizationInSWAT-CUP.py"* and *"MoveGlueFilesInCorrespondingSWAT-CUPfolder.py"* files.
+
+*  Click on "Calibrate..." (green gear shape) on the upper menu and click on "GLUE_run.bat"
+
+  * Again, this starts NSGA-2 within its own directories and brings results into SWAT-CUP GLUE directories
+
+*  To generate more results in SWAT-CUP, click on "Calibrate..." on the upper menu and click on "GLUE_Post.bat" 
+
+*  Plots and outputs can be viewed under "Calibration Outputs" and "Sensitivity analysis" in the SWAT-CUP "Project Explorer" window to the left.
+	
+
 Visit `my website <http://mehmetbercan.com/research/researchCal.html>`_ for more information.
 
 If you encounter any problems or have suggestions for the future development, 
 please contact **Mehmet B. Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
-
-
 
 
