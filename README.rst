@@ -72,10 +72,22 @@ Although above procedure is enough to run NSGA-II, this section explains how to 
 
 *  Plots and outputs can be viewed under "Calibration Outputs" and "Sensitivity analysis" in the SWAT-CUP "Project Explorer" window to the left.
 	
+	
+************
+Notes
+************ 
 
-Visit `my website <http://mehmetbercan.com/research/researchCal.html>`_ for more information.
 
-If you encounter any problems or have suggestions for the future development, 
-please contact **Mehmet B. Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
+*  Read papers bellow to understand the process behing the scripts
+*  Visit `my website <http://mehmetbercan.com/research/researchCal.html>`_ for more information
+*  If you encounter any problems or have suggestions for the future development, please contact **Mehmet B. Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
+
+**Credit:** 
+
+Please cite one of the bellow articles if you use this code:
+
+Ercan, M. B. and J. L. Goodall(2016), Design and implementation of a general software library for using NSGA-II with SWAT for multi-objective model calibration., *Environmental Modelling & Software*, 84, 112-120. doi:`10.1016/j.envsoft.2016.06.017 <http://www.sciencedirect.com/science/article/pii/S1364815216302547>`_.
+
+Ercan, M. B. and J. L. Goodall (2014), A Python tool for multi-gage calibration of SWAT models using the NSGA-II algorithm., In: Ames, D.P., Quinn, N.W.T., Rizzoli, A.E. (Eds.), 2014. *Proceedings of the 7th International Congress on Environmental Modelling and Software, June 15-19, San Diego, California, USA*. (4):2325-2331, 2014. doi:`10.13140/2.1.3865.4407 <http://www.iemss.org/sites/iemss2014/papers/iemss2014_submission_212.pdf>`_. 
 
 
