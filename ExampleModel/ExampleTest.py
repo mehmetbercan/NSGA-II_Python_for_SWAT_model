@@ -1,8 +1,10 @@
+import os#, sys
+#sys.path.append(os.path.join(os.getcwd(),"SWATnsga2Libs")) #Use this if you do not want to install library
 from nsga2lib import nsga2, SWATutilities, nsga2utilities
 
 
 #---- Input ----(space on directory may cause problems during execution)
-SWATtxtinoutDirectory = r"C:\Users\ercanm\Desktop\GitHupRepositories\NSGA-II_Python_for_SWAT_model\ExampleModel\swatTest"
+SWATtxtinoutDirectory = os.path.join(os.getcwd(),"swatTest")
 #---------------
 
 NSGAII=nsga2.nsga2(SWATtxtinoutDirectory) 

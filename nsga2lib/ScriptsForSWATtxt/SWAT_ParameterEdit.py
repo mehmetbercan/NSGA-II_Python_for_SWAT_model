@@ -2,8 +2,8 @@
 import os, glob, shutil
 
 
-DefaultDir = "./Backup"
-modelin = "./model.in"
+DefaultDir = os.path.join(os.getcwd(),"Backup")
+modelin = os.path.join(os.getcwd(),"model.in")
 
 #------------------------------------ Change parameter values-------------------------------------
 #Changes SWAT input files based on imet and parameter value

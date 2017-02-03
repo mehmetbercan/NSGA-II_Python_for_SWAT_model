@@ -1,6 +1,5 @@
-# -*- coding: cp1252 -*-
 #Runs SWAT model with all solutions and calculate objective functions
-import numpy, os, math
+import numpy, os, math, sys
 
 #-------------------------------------------------------------------------------
 #This functions will be used when ncons != 0 (number of Constraints is not zero).
@@ -136,7 +135,7 @@ def indcmp3(population,ii,jj):
 
 
 #-------------------------------------------------------------------------------
-##Nash–Sutcliffe model efficiency coefficient
+##Nash-Sutcliffe model efficiency coefficient
 def Nash_Sutcliffe(SimulatedStreamFlow, ObservedStreamFlow):
     '''(SimulatedStreamFlow, ObservedStreamFlow)''' 
     x=SimulatedStreamFlow
@@ -153,7 +152,7 @@ def Nash_Sutcliffe(SimulatedStreamFlow, ObservedStreamFlow):
     E = 1 - (A/B) # Nash-Sutcliffe model eficiency coefficient
     return E
 
-##Logaritmic Nash–Sutcliffe model efficiency coefficient
+##Logaritmic Nash-Sutcliffe model efficiency coefficient
 def Log_Nash_Sutcliffe(SimulatedStreamFlow, ObservedStreamFlow):
     '''(SimulatedStreamFlow, ObservedStreamFlow)''' 
     x=SimulatedStreamFlow
@@ -208,7 +207,7 @@ def CalculateObjectiveFunctions(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,par
     for i in xrange(popsize): #population loop
         print "\n"*5,"-"*45,"\nGeneration: ", generation, "  Simulation: ", i+1, "\n", "-"*45
         #Print parameter set in model.in file
-        modelinf = open(".\model.in","w")
+        modelinf = open(os.path.join(os.getcwd(),"model.in"),"w")
         writeline =''
         for j in xrange(nchrom): #parameter loop
             writeline += parname[j]+'\t'+str(ParameterValues[i][j])+'\n'       
@@ -216,10 +215,15 @@ def CalculateObjectiveFunctions(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,par
         modelinf.close()
         
         #Run command file (SWATedit, SWAT and extract exe files)
-        os.system(SWATdir+'/nsga2_mid.cmd')
+        if "win" in sys.platform.lower():
+            os.system(SWATdir+'/nsga2_mid.cmd')
+        elif "linux" in sys.platform.lower():
+            os.system(SWATdir+'/nsga2_mid.sh')
+        else:
+            os.system(SWATdir+'/nsga2_mid.cmd')
 
         #Read 'model.out' file
-        modelrchf = open(SWATdir+'/model.out','r')
+        modelrchf = open(os.path.join(SWATdir,"model.out"),'r')
         lines = modelrchf.readlines()
         Outlet_Modeldata = {}
         k=0; Modeldata=[]

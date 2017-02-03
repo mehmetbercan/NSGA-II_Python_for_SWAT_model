@@ -29,11 +29,23 @@ class nsga2:
         """nsga2 calibration functions"""
         """SWATtxtinout folder should have 'nsga.in' subfolder with nsga2 input files"""
         libpath = os.path.dirname(nsga2utilities.__file__)
-        #Copy necessary files to SWAT directory
-        shutil.copy2(libpath+"/ScriptsForSWATtxt/Extract_rch.py", SWATtxtinoutFolderDirectory)
-        shutil.copy2(libpath+"/ScriptsForSWATtxt/nsga2_mid.cmd", SWATtxtinoutFolderDirectory)
-        shutil.copy2(libpath+"/ScriptsForSWATtxt/swat.exe", SWATtxtinoutFolderDirectory)
-        shutil.copy2(libpath+"/ScriptsForSWATtxt/SWAT_ParameterEdit.py", SWATtxtinoutFolderDirectory)
+        #Copy necessary files to SWAT directory (Operating Platform Specific)
+        shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Extract_rch.py"), SWATtxtinoutFolderDirectory)
+        shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","SWAT_ParameterEdit.py"), SWATtxtinoutFolderDirectory)
+        if "win" in sys.platform.lower():
+            print ("Operating System is {0}".format(sys.platform))
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
+        elif "linux" in sys.platform.lower():
+            print ("Operating System is {0}".format(sys.platform))
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.sh"), SWATtxtinoutFolderDirectory)
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat2012_627"), SWATtxtinoutFolderDirectory)
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Makefile"), SWATtxtinoutFolderDirectory)
+        else: #goes with windows for now
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
+            
+            
         #Read ('nsga2.def') NSGA-II binary options input
         nsga2def = SWATtxtinoutFolderDirectory+"/NSGA2.IN/nsga2.def"
         nsga2pardef = SWATtxtinoutFolderDirectory+"/NSGA2.IN/nsga2_par.def"
@@ -221,7 +233,7 @@ class nsga2:
     
     #-------------------------------------------------------------------------------
     def CreateParentPopulation(self,generationNo):
-        nsga2utilities.CreateMatePopFromNewandOldPops(self.old_pop_ptr ,self.new_pop_ptr ,self.mate_pop_ptr,generationNo)
+        nsga2utilities.CreateMatePopFromNewandOldPops(self.old_pop_ptr ,self.new_pop_ptr ,self.mate_pop_ptr,generationNo,self.SWATdir)
         nsga2utilities.decode(self.mate_pop_ptr, self.vlen, self.lim_b);
         nsga2utilities.report(self.old_pop_ptr,self.mate_pop_ptr,generationNo,self.ngener,self.SWATdir,self.ncross,self.nmut); #Print Report: old_pop_ptr is old population and mate_pop_ptr is here the created old population for next generation
         self.new_pop_ptr = copy.deepcopy(self.mate_pop_ptr); 
