@@ -5,7 +5,7 @@ def readme():
         return f.read()
     
 setup(name='nsga2lib',
-      version='2.1',
+      version='2.2',
       description='Libraries for performing nsga2 calibration.',
       long_description=readme(),
       classifiers=[
