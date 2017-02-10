@@ -194,22 +194,21 @@ def CalculateObjectiveFunctions(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,par
     population["maxrank"]=0
 
     popsize = len(population["ind"])
-    nfunc = len(population["ind"][0]["fitness"])
     nchrom = len(population["ind"][0]["xbin"])
 
     ParameterValues=[]
-    for i in xrange(popsize):
+    for i in range(popsize):
         ParameterValues.append(population["ind"][i]["xbin"]) #/* problem variables */
 
     #&&&& without pralel SWAT run &&&&&
-    outlets = Outlet_Obsdata.keys()
+    outlets = list(Outlet_Obsdata.keys())
     outlets.sort()
-    for i in xrange(popsize): #population loop
-        print "\n"*5,"-"*45,"\nGeneration: ", generation, "  Simulation: ", i+1, "\n", "-"*45
+    for i in range(popsize): #population loop
+        print ("\n"*5,"-"*45,"\nGeneration: ", generation, "  Simulation: ", i+1, "\n", "-"*45)
         #Print parameter set in model.in file
         modelinf = open(os.path.join(os.getcwd(),"model.in"),"w")
         writeline =''
-        for j in xrange(nchrom): #parameter loop
+        for j in range(nchrom): #parameter loop
             writeline += parname[j]+'\t'+str(ParameterValues[i][j])+'\n'       
         modelinf.writelines(writeline)
         modelinf.close()

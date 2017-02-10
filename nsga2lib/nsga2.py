@@ -21,8 +21,8 @@ This mate population then copied as an old population for the next generation. T
 repeats for every generation.
 '''
 
-import copy, sys, numpy, os, random, shutil, nsga2utilities, SWATutilities
-from math import floor
+import copy, sys, numpy, os, random, shutil
+from nsga2lib import nsga2utilities, SWATutilities
 
 class nsga2:
     def __init__(self,SWATtxtinoutFolderDirectory):
@@ -32,15 +32,15 @@ class nsga2:
         #Copy necessary files to SWAT directory (Operating Platform Specific)
         shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Extract_rch.py"), SWATtxtinoutFolderDirectory)
         shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","SWAT_ParameterEdit.py"), SWATtxtinoutFolderDirectory)
-        if "win" in sys.platform.lower():
-            print ("Operating System is {0}".format(sys.platform))
-            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
-            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
-        elif "linux" in sys.platform.lower():
+        if "linux" in sys.platform.lower():
             print ("Operating System is {0}".format(sys.platform))
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.sh"), SWATtxtinoutFolderDirectory)
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat2012_627"), SWATtxtinoutFolderDirectory)
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Makefile"), SWATtxtinoutFolderDirectory)
+        elif "win" in sys.platform.lower():
+            print ("Operating System is {0}".format(sys.platform))
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
+            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
         else: #goes with windows for now
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
@@ -73,7 +73,7 @@ class nsga2:
         if nchrom <= 0: sys.exit("ERROR: 'nsga2_par.def' files does not have prameters (or paramters doesn't start with 'a','r' or 'v')")
         chrom = 0#Chromosome length (Total Sum of the bit value)
         vlen=[];lim_b=[]; parname = []
-        for i in xrange(nchrom):
+        for i in range(nchrom):
             vlen.append(bits) #the no.of bits assigned to the %d variable\n"%(i+1)
             chrom += bits;
             parname.append(lines[i+1].split()[0])
@@ -170,8 +170,8 @@ class nsga2:
             f.close()
             if self.popsize != len(LastGenPars): sys.exit("ERROR: poulation size is not equal to population size in output.out file")
             #Write values in old_pop_ptr
-            for i in xrange(self.popsize):
-                for j in xrange(self.nchrom):
+            for i in range(self.popsize):
+                for j in range(self.nchrom):
                     old_pop_ptr["ind"][i]["xbin"][j] = LastGenPars[i][j]
             #Copy old output file
             shutil.copy2(self.SWATdir+"/NSGA2.OUT/output.out", self.SWATdir+"/NSGA2.OUT/output_previous.out")            
@@ -183,18 +183,18 @@ class nsga2:
             InitialLHSpop = nsga2utilities.CreateDefaultPopulation(self.M,self.chrom,self.nchrom,self.nfunc)
             #Latin Hypercube Samples
             LHSamples = []
-            for j in xrange(len(self.lim_b)):
+            for j in range(len(self.lim_b)):
                 LowBound = self.lim_b[j][0]
                 UpBound = self.lim_b[j][1]
                 parVals = []
-                for i in xrange(self.M+1):
+                for i in range(self.M+1):
                     point = i * 1. / self.M
                     parValue = (point * (UpBound - LowBound)) + LowBound
                     parVals.append(parValue)
                 LHSamples.append(parVals)
             #Random selection of values from each interval of LHS
-            for i in xrange(self.M):
-                for j in xrange(self.nchrom):
+            for i in range(self.M):
+                for j in range(self.nchrom):
                     rndinteger = int(round(self.M*random.random(),0))
                     InitialLHSpop["ind"][i]["xbin"][j] = LHSamples[j][rndinteger]         
             #/*Function Calculaiton*/
@@ -202,7 +202,7 @@ class nsga2:
             #Select the first population from InitialLHSpop
             n=0
             for rank in range(1,self.M+1):
-                for i in xrange(self.M):
+                for i in range(self.M):
                     if rank >= InitialLHSpop["ind"][i]["rank"] and InitialLHSpop["ind"][i]["flag"] != 99:
                         old_pop_ptr["ind"][n] = copy.deepcopy(InitialLHSpop["ind"][i])
                         n+=1

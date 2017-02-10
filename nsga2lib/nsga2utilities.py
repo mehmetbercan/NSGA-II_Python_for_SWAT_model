@@ -1,5 +1,5 @@
 #Creates Mutated population (non-dominating sorting and crowding distance functions)
-import numpy, os, sys
+import numpy, os
 from math import floor
 
 #-------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ def CreateDefaultPopulation(popsize,chrom,nchrom,nfunc):
     popltn["maxrank"]=0        #/*Maximum rank present in the population*/
     popltn["rankno"]=numpy.zeros(2*popsize,int)#/*Individual at different ranks*/
     popltn["ind"]=[]    #/*Different Individuals*/
-    for i in xrange(popsize):
+    for i in range(popsize):
         indvdl = {}
         indvdl["genes"]=numpy.zeros(chrom,int)#/*bianry chromosome*/
         indvdl["rank"]=0      #/*Rank of the individual*/
@@ -198,7 +198,7 @@ def Selection(old_pop_ptr,pop2_ptr,warmup_random): #nselect() in deb's c code #s
     indZeros = indzeros(chrom)
 
     k=-1;
-    for n in xrange(popsize):
+    for n in range(popsize):
         k+=1
         j=0;j1 = 0;
 

@@ -1,4 +1,5 @@
 from setuptools import setup
+import os
 
 def readme():
     with open('README.rst') as f:
@@ -22,5 +23,12 @@ setup(name='nsga2lib',
       license='MIT',
       packages=['nsga2lib'],
       install_requires=['nsga2lib','numpy'],
+	  data_files   = [(os.path.join('nsga2lib','ScriptsForSWATtxt'),[os.path.join('nsga2lib','ScriptsForSWATtxt','Extract_rch.py'),
+								  os.path.join('nsga2lib','ScriptsForSWATtxt','SWAT_ParameterEdit.py'),
+								  os.path.join('nsga2lib','ScriptsForSWATtxt','Makefile'),
+								  os.path.join('nsga2lib','ScriptsForSWATtxt','swat2012_627'),
+								  os.path.join('nsga2lib','ScriptsForSWATtxt','nsga2_mid.sh'),
+								  os.path.join('nsga2lib','ScriptsForSWATtxt','nsga2_mid.cmd'),
+								  os.path.join('nsga2lib','ScriptsForSWATtxt','swat.exe'),])],
       include_package_data=True
       )
