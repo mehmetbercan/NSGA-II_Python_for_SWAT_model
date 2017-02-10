@@ -32,7 +32,7 @@ class nsga2:
         #Copy necessary files to SWAT directory (Operating Platform Specific)
         shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Extract_rch.py"), SWATtxtinoutFolderDirectory)
         shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","SWAT_ParameterEdit.py"), SWATtxtinoutFolderDirectory)
-        if "linux" in sys.platform.lower():
+        if "linux" in sys.platform.lower() or "darwin" in sys.platform.lower():
             print ("Operating System is {0}".format(sys.platform))
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.sh"), SWATtxtinoutFolderDirectory)
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat2012_627"), SWATtxtinoutFolderDirectory)
