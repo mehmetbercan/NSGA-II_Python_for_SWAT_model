@@ -84,126 +84,128 @@ for par in par_ValImet.keys():
     if par == "ALPHA_BF.gw": ##AlphaBf# `ok E=0.9997
         for path in glob.glob( os.path.join("./", '*.gw') ):
             SWATparameterChange(path, value, imet, 5, 0, 16)
-        print "ALPHA_BF.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("ALPHA_BF.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "BIOMIX.mgt": ##Biomix# `ok E=0.9998
         for path in glob.glob( os.path.join("./", '*.mgt') ):
             SWATparameterChange(path, value, imet, 10, 0, 16)
-        print "BIOMIX.mgt---> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("BIOMIX.mgt---> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "CANMX.hru": ##Canmx#`ok E=0.9996
         for path in glob.glob( os.path.join("./", '*.hru') ):
             SWATparameterChange(path, value, imet, 9, 0, 16)
-        print "CANMX.hru----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("CANMX.hru----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "CH_K2.rte": ##Ch_K2# `ok E=0.9990
         for path in glob.glob( os.path.join("./", '*.rte') ):
             SWATparameterChange(path, value, imet, 7, 0, 14)
-        print "CH_K2.rte---->  Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("CH_K2.rte---->  Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "CH_N2.rte": ##Ch_N2# `ok E=0.9768 at chn2=1.0
         for path in glob.glob( os.path.join("./", '*.rte') ):
             SWATparameterChange(path, value, imet, 6, 0, 14)
-        print "CH_N2.rte---->  Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("CH_N2.rte---->  Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "CN2.mgt": ##Cn2# `ok E=0.9990
         for path in glob.glob( os.path.join("./", '*.mgt') ):
             SWATparameterChange(path, value, imet, 11, 0, 16)
-        print "CN2.mgt------> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("CN2.mgt------> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "EPCO.hru": ##Epco# `ok E=0.9997
         for path in glob.glob( os.path.join("./", '*.hru') ):
             SWATparameterChange(path, value, imet, 11, 0, 16)
-        print "EPCO.hru-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("EPCO.hru-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "ESCO.hru": ##Esco# `ok E=0.9998
         for path in glob.glob( os.path.join("./", '*.hru') ):
             SWATparameterChange(path, value, imet, 10, 0, 16)
-        print "ESCO.hru-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("ESCO.hru-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "GW_DELAY.gw": ##GwDelay# `ok E=0.9997
         for path in glob.glob( os.path.join("./", '*.gw') ):
             SWATparameterChange(path, value, imet, 4, 0, 16)
-        print "GW_DELAY.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("GW_DELAY.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "GW_REVAP.gw": ##GwRevap# `ok E=0.9993
         for path in glob.glob( os.path.join("./", '*.gw') ):
             SWATparameterChange(path, value, imet, 7, 0, 16)
-        print "GW_REVAP.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("GW_REVAP.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "GWQMN.gw": ##Gwqmn# `ok E=0.9993
         for path in glob.glob( os.path.join("./", '*.gw') ):
             SWATparameterChange(path, value, imet, 6, 0, 16)
-        print "GWQMN.gw-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("GWQMN.gw-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     #Not in ChangeparAll2009flowpar.dat (blai and slope missing in it)
     if par == "RCHRG_DP.gw": ##Rchrg_Dp# `NA E=0.8768
         for path in glob.glob( os.path.join("./", '*.gw') ):
             SWATparameterChange(path, value, imet, 9, 0, 16)
-        print "RCHRG_DP.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("RCHRG_DP.gw--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "REVAPMN.gw": ##Revapmn# `ok E=0.9996
         for path in glob.glob( os.path.join("./", '*.gw') ):
             SWATparameterChange(path, value, imet, 8, 0, 16)
-        print "REVAPMN.gw---> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("REVAPMN.gw---> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SFTMP.bsn": ##Sftmp# `ok E=0.9996 (Not that No snow fall occurs in Eno --results were same in different values of sftmp)
         path = "./basins.bsn"
         SWATparameterChange(path, value, imet, 4, 0, 16)
-        print "SFTMP.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SFTMP.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SLSUBBSN.hru": ##Slsubbsn# `ok E=0.9996
         for path in glob.glob( os.path.join("./", '*.hru') ):
             SWATparameterChange(path, value, imet, 3, 0, 16)
-        print "SLSUBBSN.hru-> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SLSUBBSN.hru-> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SMFMN.bsn": ##Smfmn# `ok E=0.9996 (Not that No snow fall occurs in Eno --results were same in different values of sftmp for testoriginal)
         path = "./basins.bsn"
         SWATparameterChange(path, value, imet, 7, 0, 16)
-        print "SMFMN.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SMFMN.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
+        
     if par == "SMFMX.bsn": ##Smfmx#  `ok E=0.9996 (Not that No snow fall occurs in Eno --results were same in different values of sftmp for testoriginal)
         path = "./basins.bsn"
         SWATparameterChange(path, value, imet, 6, 0, 16)
-        print "SMFMX.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SMFMX.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
+        
     if par == "SMTMP.bsn": ##Smtmp# `ok E=0.9996 (Not that No snow fall occurs in Eno --results were same in different values of sftmp)
         path = "./basins.bsn"
         SWATparameterChange(path, value, imet, 5, 0, 16)
-        print "SMTMP.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SMTMP.bsn----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SOL_ALB().sol": #SolAlb# #It does not change any result with change in sol file for test.
         for path in glob.glob( os.path.join("./", '*.sol') ):
             SWATparameterChange(path, value, imet, 17, 27, 12, "multi")
-        print "SOL_ALB().sol> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SOL_ALB().sol> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SOL_AWC().sol": ##Sol_Awc# `ok E=0.9996
         for path in glob.glob( os.path.join("./", '*.sol') ):
             SWATparameterChange(path, value, imet, 10, 27, 12, "multi")
-        print "SOL_AWC().sol> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SOL_AWC().sol> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SOL_K().sol": ##SolK# `ok E=0.9996
         for path in glob.glob( os.path.join("./", '*.sol') ):
             SWATparameterChange(path, value, imet, 11, 27, 12, "multi")
-        print "SOL_K().sol--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SOL_K().sol--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SOL_Z().sol": #SolZ# `ok E=0.9900--
         for path in glob.glob( os.path.join("./", '*.sol') ):
             SWATparameterChange(path, value, imet, 8, 27, 12, "multi")
-        print "SOL_Z().sol--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SOL_Z().sol--> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "SURLAG.bsn": ##Surlag# `ok E=0.9995
         path = "./basins.bsn"
         SWATparameterChange(path, value, imet, 20, 0, 16)
-        print "SURLAG.bsn---> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("SURLAG.bsn---> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "TIMP.bsn": ##Timp# `ok E=0.9996 (Not that No snow fall occurs in Eno --results were same in different values of sftmp for testoriginal)
         path = "./basins.bsn"
         SWATparameterChange(path, value, imet, 8, 0, 16)
-        print "TIMP.bsn-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("TIMP.bsn-----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
     if par == "TLAPS.sub": ##Tlaps#    #It does not change any result with change in sol file for test.
         for path in glob.glob( os.path.join("./", '*.sub') ):
             SWATparameterChange(path, value, imet, 22, 0, 16)
-        print "TLAPS.sub----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)"
+        print("TLAPS.sub----> Value: ", "%.5e"%value, "IMET: ", imet, " (1-Replace, 2-Add, 3-%Add)")
 
 
 ###--------------Nitrogen Parameters----------------
