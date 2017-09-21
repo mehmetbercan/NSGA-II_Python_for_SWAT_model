@@ -22,13 +22,15 @@ Setup
 **Install the Python module:**
 
 *  Python setuptools are required for installation
+*  Download the repository
 *  Open a command prompt and "cd" to "./nsga2lib"
 *  Then command "Python setup.py install"
- 
+*  Alternatively, you can install directly from github using the command in the command prompt ```pip install https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/zipball/master```
+
 **Setup SWAT Model:** 
 
 *  Create *"./Backup"* folder in  *"SWATtxtinout"* folder and copy content in *"SWATtxtinout"* to the *"SWATtxtinout/Backup"* folder.
-*  Coppy *"ExampleModel/swatTest/NSGA2.IN"* in to the *"SWATtxtinout"* folder.
+*  Copy *"ExampleModel/swatTest/NSGA2.IN"* in to the *"SWATtxtinout"* folder.
 *  Setup NSGA-II inputs in *"./NSGA2.IN"* folder. 
 
   * **nsga2.def file:** Defines NSGA-II methods setting.
