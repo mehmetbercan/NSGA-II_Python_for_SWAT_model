@@ -80,13 +80,13 @@ Notes
 ************ 
 
 
-*  Read papers bellow to understand the process behing the scripts
+*  Read papers below to understand the process behind the scripts
 *  Visit `my website <http://mehmetbercan.com/research/researchCal.html>`_ for more information
 *  If you encounter any problems or have suggestions for the future development, please contact **Mehmet B. Ercan** at mehmetbercan@gmail.com or ercanm@engr.sc.edu.
 
 **Credit:** 
 
-Please cite one of the bellow articles if you use this code:
+Please cite one of the below articles if you use this code:
 
 Ercan, M. B. and J. L. Goodall(2016), Design and implementation of a general software library for using NSGA-II with SWAT for multi-objective model calibration., *Environmental Modelling & Software*, 84, 112-120. doi:`10.1016/j.envsoft.2016.06.017 <http://www.sciencedirect.com/science/article/pii/S1364815216302547>`_.
 
