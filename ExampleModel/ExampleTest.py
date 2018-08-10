@@ -26,5 +26,5 @@ while i < TotalNumGenerations:
     i+=1
 
 
-print "The NSGA-II execution finished. Look at the results in NSGA2.OUT folder.";
+print("The NSGA-II execution finished. Look at the results in NSGA2.OUT folder.");
 
