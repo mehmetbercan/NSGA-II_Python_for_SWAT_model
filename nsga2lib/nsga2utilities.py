@@ -170,6 +170,7 @@ def CreateDefaultPopulation(popsize,chrom,nchrom,nfunc):
         indvdl["flag"]=0      #/*Flag for ranking*/
         indvdl["xbin"]=numpy.zeros(nchrom,float)#/*list of decoded value of the chromosome */
         indvdl["fitness"]=numpy.zeros(nfunc,float)#/*Fitness values */
+        indvdl["fitness"][:] = 1e15 #To avoid being best fit in case of objective function error during initialization
         indvdl["cub_len"]=0.0 #/*crowding distance of the individual*/
         popltn["ind"].append(indvdl)
     return popltn
