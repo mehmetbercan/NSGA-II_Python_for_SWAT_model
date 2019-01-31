@@ -1,0 +1,17 @@
+#ExampleModel/swatTest/*
+
+# Compiled python files
+*.py[oc]
+*.pytest_cache/
+# gedit files
+*__pycache__/
+*~
+
+# Python special dirs and files
+*.egg-info
+*.cache/
+*.coverage
+build/
+dist/
+bin/
+__pycache__/
