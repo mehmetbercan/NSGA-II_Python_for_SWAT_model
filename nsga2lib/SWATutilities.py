@@ -1,5 +1,6 @@
 #Runs SWAT model with all solutions and calculate objective functions
 import numpy, os, math, sys
+from nsga2lib import nsga2utilities
 
 #-------------------------------------------------------------------------------
 #This functions will be used when ncons != 0 (number of Constraints is not zero).
@@ -189,6 +190,7 @@ def PercentBias(SimulatedStreamFlow, ObservedStreamFlow):
     return PB
 
 def CalculateObjectiveFunctions(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname, generation,SWATdir):
+    nsga2utilities.round_parameters(population)
     os.chdir(SWATdir)
     #/*Initializing the max rank to zero*/
     population["maxrank"]=0
@@ -304,6 +306,7 @@ def CalculateObjectiveFunctions(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,par
     #&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
     #/*---------------------------* RANKING *------------------------------*/
+    nsga2utilities.round_fitness(population)
     rankcon(population);
     return;
 #-------------------------------------------------------------------------------
