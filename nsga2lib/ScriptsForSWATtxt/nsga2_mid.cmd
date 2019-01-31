@@ -1,6 +1,6 @@
 :: required
 
-SWAT_ParameterEdit.py
+python SWAT_ParameterEdit.py
 
 
 :: required
@@ -10,4 +10,4 @@ swat.exe
 
 :: required
 
-Extract_rch.py
+python Extract_rch.py

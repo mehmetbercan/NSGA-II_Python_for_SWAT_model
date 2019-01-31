@@ -2,6 +2,28 @@
 import numpy, os
 from math import floor
 
+
+def round_parameters(pop_ptr, decimal = 6):
+    popsize = len(pop_ptr["ind"])
+    nchrom = len(pop_ptr["ind"][0]["xbin"])
+    i=0
+    while i < popsize:
+        m = 0
+        while m < nchrom:
+            pop_ptr["ind"][i]["xbin"][m] = round(pop_ptr["ind"][i]["xbin"][m],decimal)
+            m += 1
+        i += 1
+def round_fitness(pop_ptr, decimal = 3):
+    popsize = len(pop_ptr["ind"])
+    nfunc = len(pop_ptr["ind"][0]["fitness"])
+    i=0
+    while i < popsize:
+        m = 0
+        while m < nfunc:
+            pop_ptr["ind"][i]["fitness"][m] = round(pop_ptr["ind"][i]["fitness"][m],decimal)
+            m += 1
+        i += 1
+        
 #-------------------------------------------------------------------------------
 #/*This program subroutine is used to print the report*/
 def report(pop1_ptr,pop2_ptr,igen,ngen,SWATdir,ncross,nmut):

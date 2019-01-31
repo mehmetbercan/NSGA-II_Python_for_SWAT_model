@@ -66,7 +66,7 @@ class SWAT:
 #Convert dictionary (Date_value) to array (date and value)---used up in the class
 def DictionaryofDate_valuetoArrays(Date_value):
     '''Returns (array): date, value '''
-    date = Date_value.keys()
+    date = list(Date_value.keys())
     date.sort()
     value = []
     for d in date:
@@ -95,7 +95,7 @@ for i in range(0,len(lines)):
             Outlet_Obsorder[outlet] = Obsorder
     except: sys.exit("ERROR: check the 'observed_rch.txt' file (the gage on line:"+str(i)+")")
 
-outlets=Outlet_Obsorder.keys()
+outlets=list(Outlet_Obsorder.keys())
 outlets.sort()
 mlines=""
 for outlet in outlets:
@@ -113,7 +113,7 @@ f=open(os.path.join(os.getcwd(),"model.out"),"w")
 f.writelines(mlines)
 f.close()
 
-print "Excraction is done for outlets: " , outlets
+print ("Excraction is done for outlets: " , outlets)
 
 
 
