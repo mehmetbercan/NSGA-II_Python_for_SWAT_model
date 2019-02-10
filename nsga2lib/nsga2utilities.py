@@ -233,7 +233,7 @@ def Selection(old_pop_ptr,pop2_ptr,warmup_random): #nselect() in deb's c code #s
 
         # /*Select first parent randomly*/
         if rnd <= 0:j = indZeros #The population has max individual members in the c code but not here so last item there is zero
-        else:j = old_pop_ptr["ind"][rnd-1];
+        else:j = old_pop_ptr["ind"][int(rnd-1)];
 
         rnd2 = warmup_random.randomperc();
         rnd2 = popsize * rnd2;
@@ -243,7 +243,7 @@ def Selection(old_pop_ptr,pop2_ptr,warmup_random): #nselect() in deb's c code #s
 
         #/*Select second parent randomly*/
         if rnd1 <= 0:j1 = indZeros #The population has max individual members in the c code but not here so last item there is zero
-        else:j1 = old_pop_ptr["ind"][rnd1-1];
+        else:j1 = old_pop_ptr["ind"][int(rnd1-1)];
 
         s1_ptr = j["genes"][:];
         fit_ptr1 = j["rank"];
