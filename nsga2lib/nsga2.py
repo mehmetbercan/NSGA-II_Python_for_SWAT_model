@@ -25,11 +25,16 @@ import copy, sys, numpy, os, random, shutil
 from nsga2lib import nsga2utilities, SWATutilities
 
 class nsga2:
-    def __init__(self,SWATtxtinoutFolderDirectory):
-        """nsga2 calibration functions"""
-        """SWATtxtinout folder should have 'nsga.in' subfolder with nsga2 input files"""
+    def __init__(self,SWATtxtinoutFolderDirectory, IsParallel = False):
+        '''SWATtxtinoutFolderDirectory = The directory with SWAT files. This
+        folder should have backup and nsga.in subfolders.
+        IsParallel = True of False; True runs calibration in parallel as much
+        as computer's cpu (core) number. This is tested only with Windows OS.
+        '''
+        
+
         libpath = os.path.dirname(nsga2utilities.__file__)
-        #Copy necessary files to SWAT directory (Operating Platform Specific)
+        # Copy necessary files to SWAT directory (Operating Platform Specific)
         shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Extract_rch.py"), SWATtxtinoutFolderDirectory)
         shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","SWAT_ParameterEdit.py"), SWATtxtinoutFolderDirectory)
         if "linux" in sys.platform.lower() or "darwin" in sys.platform.lower():
@@ -39,11 +44,31 @@ class nsga2:
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","Makefile"), SWATtxtinoutFolderDirectory)
         elif "win" in sys.platform.lower():
             print ("Operating System is {0}".format(sys.platform))
-            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
+            if IsParallel: 
+                shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid_prll.cmd"), SWATtxtinoutFolderDirectory)
+            else:
+                shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
         else: #goes with windows for now
-            shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
+            if IsParallel: 
+                shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid_prll.cmd"), SWATtxtinoutFolderDirectory)
+            else:
+                shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","nsga2_mid.cmd"), SWATtxtinoutFolderDirectory)
             shutil.copy2(os.path.join(libpath,"ScriptsForSWATtxt","swat.exe"), SWATtxtinoutFolderDirectory)
+        
+        # Copy swat files for paralel runs 
+        cpu_number = -99
+        if IsParallel:
+            try:
+                import multiprocessing
+                from distutils.dir_util import copy_tree
+            except: 
+                sys.exit('Install multiprocessing and distutils libraries')
+            cpu_number = multiprocessing.cpu_count()
+            for cpu in range(1, cpu_number+1):
+                copy_tree(SWATtxtinoutFolderDirectory, 
+                          os.path.join(SWATtxtinoutFolderDirectory, 
+                                       'swat_run_on_cpu_{}'.format(cpu)))
             
             
         #Read ('nsga2.def') NSGA-II binary options input
@@ -135,6 +160,8 @@ class nsga2:
         self.mate_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
         #/*Initialize the random no generator*/
         self.warmup_random = random_(seed); #
+        self.is_parallel = IsParallel
+        self.cpu_number = cpu_number
     #-------------------------------------------------------------------------------
 
 
@@ -176,7 +203,11 @@ class nsga2:
             #Copy old output file
             shutil.copy2(self.SWATdir+"/NSGA2.OUT/output.out", self.SWATdir+"/NSGA2.OUT/output_previous.out")            
             #/*Function Calculaiton*/
-            SWATutilities.CalculateObjectiveFunctions(old_pop_ptr,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"Previous NSGA-II run Last Population",self.SWATdir)
+            if self.is_parallel:
+                SWATutilities.CalculateObjectiveFunctionsinParallel(old_pop_ptr,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"Previous NSGA-II run Last Population",self.SWATdir, self.cpu_number)
+                
+            else:
+                SWATutilities.CalculateObjectiveFunctions(old_pop_ptr,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"Previous NSGA-II run Last Population",self.SWATdir)
             
         else:
             #Defining Latin Hypercube Sampling population
@@ -198,7 +229,10 @@ class nsga2:
                     rndinteger = int(round(self.M*random.random(),0))
                     InitialLHSpop["ind"][i]["xbin"][j] = LHSamples[j][rndinteger]         
             #/*Function Calculaiton*/
-            SWATutilities.CalculateObjectiveFunctions(InitialLHSpop,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"LHS",self.SWATdir)
+            if self.is_parallel:
+                SWATutilities.CalculateObjectiveFunctionsinParallel(InitialLHSpop,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"LHS",self.SWATdir, self.cpu_number)
+            else:
+                SWATutilities.CalculateObjectiveFunctions(InitialLHSpop,self.Outlet_Obsdata,self.FuncOpt,self.FuncOptAvr,self.parname,"LHS",self.SWATdir)
             #Select the first population from InitialLHSpop
             n=0
             for rank in range(1,self.M+1):

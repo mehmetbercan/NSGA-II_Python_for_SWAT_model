@@ -310,3 +310,140 @@ def CalculateObjectiveFunctions(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,par
     rankcon(population);
     return;
 #-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def CalculateObjectiveFunctionsinParallel(population,Outlet_Obsdata,FuncOpt,FuncOptAvr,parname, generation,SWATdir, cpu_number):
+    nsga2utilities.round_parameters(population)
+    os.chdir(SWATdir)
+    #/*Initializing the max rank to zero*/
+    population["maxrank"]=0
+
+    popsize = len(population["ind"])
+    nchrom = len(population["ind"][0]["xbin"])
+
+    ParameterValues=[]
+    for i in range(popsize):
+        ParameterValues.append(population["ind"][i]["xbin"]) #/* problem variables */
+
+    #&&&& without pralel SWAT run &&&&&
+    outlets = list(Outlet_Obsdata.keys())
+    outlets.sort()
+    for i in range(popsize): #population loop
+        print ("\n"*5,"-"*45,"\nGeneration: ", generation, "  Simulation: ", i+1, "\n", "-"*45)
+        #Print parameter set in model.in file
+        modelinf = open(os.path.join(os.getcwd(),"model.in"),"w")
+        writeline =''
+        for j in range(nchrom): #parameter loop
+            writeline += parname[j]+'\t'+str(ParameterValues[i][j])+'\n'       
+        modelinf.writelines(writeline)
+        modelinf.close()
+        
+        #Run command file (SWATedit, SWAT and extract exe files)
+        if "win" in sys.platform.lower():
+            os.system(SWATdir+'/nsga2_mid_prll.cmd')
+        elif "linux" in sys.platform.lower():
+            os.system(SWATdir+'/nsga2_mid.sh')
+        else:
+            os.system(SWATdir+'/nsga2_mid.cmd')
+
+        #Read 'model.out' file
+        modelrchf = open(os.path.join(SWATdir,"model.out"),'r')
+        lines = modelrchf.readlines()
+        Outlet_Modeldata = {}
+        k=0; Modeldata=[]
+        for outlet in outlets:
+            nofdatapoints = len(Outlet_Obsdata[outlet])
+            for j in range(k,k+nofdatapoints):
+                Modeldata.append(float(lines[j].split()[1]))
+            Outlet_Modeldata[outlet] = Modeldata
+            k = j+1
+            Modeldata=[]
+            
+        #Calculate Objective functions for each site (gage)
+        objectivefuncs = []
+        for outlet in outlets:
+            outflowSWAT = Outlet_Modeldata[outlet]
+            outflowUSGS = Outlet_Obsdata[outlet]
+            #Define x and y for model efficiency coefficients
+            x = outflowSWAT #Simulated parameters
+            y = outflowUSGS #Measured parameters
+
+            if FuncOpt == 1:
+                E = Nash_Sutcliffe(x,y) #Nash-Sutcliffe model efficiency coefficient
+                E0best = 1 - E #0 is the best and +infinity is the worst
+                objectivefuncs.append(E0best)
+            if FuncOpt == 2:
+                R = numpy.corrcoef(x, y)[0,1] 
+                R2 = math.pow(R,2) #Corelation coefficient
+                R20best = 1 - R2 #0 is the best and + 1 is the worst
+                objectivefuncs.append(R20best)
+            if FuncOpt == 3:
+                E = Nash_Sutcliffe(x,y) #Nash-Sutcliffe model efficiency coefficient
+                E0best = 1 - E #0 is the best and +infinity is the worst
+                LE = Log_Nash_Sutcliffe(x,y) #Log Nash-Sutcliffe model efficiency coefficient
+                LE0best = 1 - LE #0 is the best and +infinity is the worst
+                objectivefuncs.append(E0best)
+                objectivefuncs.append(LE0best)
+            if FuncOpt == 5:
+                E = Nash_Sutcliffe(x,y) #Nash-Sutcliffe model efficiency coefficient
+                E0best = 1 - E #0 is the best and +infinity is the worst
+                PB = PercentBias(x,y) #Log Nash-Sutcliffe model efficiency coefficient
+                PB0best = abs(PB/100.0) #0 is the best and +infinity is the worst 
+                objectivefuncs.append(E0best)
+                objectivefuncs.append(PB0best)
+            if FuncOpt == 4:
+                E = Nash_Sutcliffe(x,y) #Nash-Sutcliffe model efficiency coefficient
+                E0best = 1 - E #0 is the best and +infinity is the worst
+                LE = Log_Nash_Sutcliffe(x,y) #Log Nash-Sutcliffe model efficiency coefficient
+                LE0best = 1 - LE #0 is the best and +infinity is the worst
+                R = numpy.corrcoef(x, y)[0,1] 
+                R2 = math.pow(R,2) #Corelation coefficient
+                R20best = 1 - R2 #0 is the best and + 1 is the worst
+                objectivefuncs.append(E0best)
+                objectivefuncs.append(LE0best)
+                objectivefuncs.append(R20best)  
+        #Average objective functions
+        nobjfunc_=1
+        if FuncOpt==3 or FuncOpt==5:
+            nobjfunc_=2
+        if FuncOpt==4:
+            nobjfunc_=3
+        nobjsite_=len(outlets)
+        newobjectivefuncs=[]
+        if FuncOptAvr==1: #Average Objective sites
+            for k in range(0,nobjfunc_):
+                objfuncav=0
+                for j in range(0,nobjsite_):
+                    objfuncav+=objectivefuncs[(k+j*nobjfunc_)]/nobjsite_
+                newobjectivefuncs.append(objfuncav)  
+        elif FuncOptAvr==2: #Average Objective Functions
+            for k in range(0,nobjsite_):
+                objsiteav=0
+                for j in range(0,nobjfunc_):
+                    objsiteav+=objectivefuncs[(k*nobjfunc_+j)]/nobjfunc_
+                newobjectivefuncs.append(objsiteav)             
+        else: #Do not average
+            newobjectivefuncs = objectivefuncs
+        #Add objective functions to population
+        population["ind"][i]['fitness'] = newobjectivefuncs
+    #&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+    #/*---------------------------* RANKING *------------------------------*/
+    nsga2utilities.round_fitness(population)
+    rankcon(population);
+    return;
+#-------------------------------------------------------------------------------
