@@ -23,7 +23,7 @@ The [SCH problem](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model
 The [ZTD2 problem](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py#L26>) added into the Tests folder. The figure bellow is generated from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py>) script itself.
 
 ![ZTD2_Pareto](./images/ZTD2_Pareto.png "ZTD2_Pareto")
-  > The 20th Generation from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py>)
+  > The Pareto front from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py>)
  
 ![ZTD2_Pareto_Deb](./images/ZTD2_Pareto_Deb.png "ZTD2_Pareto_Deb")
   > The ZTD2 problem Pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>)
