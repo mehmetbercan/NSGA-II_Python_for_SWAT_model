@@ -75,7 +75,7 @@ def CalculateObjectiveFunctions(population):
 # --------------------------------------------------------------------
 # Define NSGA2 Settings
 setting_dict = {'PopSize': 100,
-                'GenNumber': 150,
+                'GenNumber': 250,
                 'CrossPrb': 0.9,
                 'CrossTyp': 2,
                 'Bits': 6,
