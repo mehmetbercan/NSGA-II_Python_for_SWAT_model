@@ -11,11 +11,11 @@ This folder tests the NSGA-II algorithm with problems from [Dr. Deb's paper (200
 
 The [SCH problem](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py#L26>) added into the Tests folder. Reached pareto front in just 20 generation since used Latin Hypercube Sampling (LHS) for the initial population. The figure bellow is generated from the [SCH.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py>) script itself.
 
-![SCH_Pareto](./images/SCH_Pareto.PNG "SCH_Pareto")
-  > The 20th Generation from the SCH Script
+![SCH_Pareto](./images/SCH_Pareto.png "SCH_Pareto")
+  > The 20th Generation from the [SCH.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py>); PS. In case figure does not show up, [here](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/56bac2932b1235295862a17423a10b45cc8e8684/images/SCH_Pareto.png>) is the link to the figure.
  
-![SCH_Pareto_Deb](./images/SCH_Pareto_Deb.PNG "SCH_Pareto_Deb")
-  > The SCH problem pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>)
+![SCH_Pareto_Deb](./images/SCH_Pareto_Deb.png "SCH_Pareto_Deb")
+  > The SCH problem pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>); PS. In case figure does not show up, [here](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/56bac2932b1235295862a17423a10b45cc8e8684/images/SCH_Pareto_Deb.png>) is the link to the figure.
 	
 	
 	
