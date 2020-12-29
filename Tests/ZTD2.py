@@ -23,16 +23,16 @@ from nsga2lib import nsga2, nsga2utilities
 HERE = os.path.dirname(os.path.realpath(__file__))
 
 # Objective Function Calculator: Equvalent of Model Run and Calculate Objective Function
-def SCHproblem_obj_func(parvals):
+def ZTD2_problem_obj_func(parvals):
     '''
-    SCH is a one parameter and two fitness problem. Optimal solution is within
-    0 and 2. Upper and lower limits are -10**3 and 10**3, respectively.
+    This is a problem that is used to test GA
     '''
-    x = parvals[0]
-    f1 = x**2
-    f2 = (x - 2)**2
+    n = len(parvals)
+    x1 = parvals[0]
+    g = 1+(9*sum(parvals[1:]))/(n-1)
+    f1 = x1
+    f2 = g*(1-(x1/g)**2)
     return [f1, f2]
-
 
 def CalculateObjectiveFunctions(population):
     """
@@ -61,7 +61,7 @@ def CalculateObjectiveFunctions(population):
   
         
         #Calculate Objective functions
-        objectivefuncs = SCHproblem_obj_func(parvals)
+        objectivefuncs = ZTD2_problem_obj_func(parvals)
                       
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #The user should stop editing after this line.
@@ -70,22 +70,24 @@ def CalculateObjectiveFunctions(population):
         population["ind"][i]['fitness'] = objectivefuncs
     return;
 #-------------------------------------------------------------------------------
-
+    
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 # Define NSGA2 Settings
-setting_dict = {'PopSize': 150,
-                'GenNumber': 20,
+setting_dict = {'PopSize': 100,
+                'GenNumber': 150,
                 'CrossPrb': 0.9,
                 'CrossTyp': 2,
-                'Bits': 15,
+                'Bits': 6,
                 'MutPrb': 0.5,
                 'seed': 0.5,
                 'ObjFuncNum': 2,
-                'M': 1000,
+                'M': 100,
                 'ReadMFrmOut': 0}
 # Define Parameters and their limits
-para_dict = {"PARAM1": [-10**3, 10**3]}
+para_dict = {'PARAM1':[0,1]}
+for i in range(2, 31):
+    para_dict['PARAM{}'.format(i)] = [0,1]
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 
@@ -125,8 +127,9 @@ while i < TotalNumGenerations:
     #and create the old population for next generation. Report is printed during this function process.
 
     # plot
-    df = nsga2utilities.CreatePopulationDataframe(NSGAII.mate_pop_ptr, NSGAII.parname)
-    df[['f1', 'f2']].plot.scatter('f1','f2', title='Generation {}'.format(i+1), figsize=(6.5,6))
+    if (i+1)%25==0:
+        df = nsga2utilities.CreatePopulationDataframe(NSGAII.mate_pop_ptr, NSGAII.parname)
+        df[['f1', 'f2']].plot.scatter('f1','f2', title='Generation {}'.format(i+1), figsize=(6.5,6))
     
     i+=1
 

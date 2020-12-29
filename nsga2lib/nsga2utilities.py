@@ -85,7 +85,7 @@ def Selection(old_pop_ptr,pop2_ptr,warmup_random): #nselect() in deb's c code #s
         rnd2 = popsize*rnd2;
         rnd = int(floor(rnd2));
         if(rnd == 0):rnd = popsize - k;
-        if(rnd == popsize):rnd = abs(popsize-2)/2;
+        if(rnd == popsize):rnd = int(abs(popsize-2)/2);
 
         # /*Select first parent randomly*/
         if rnd <= 0:j = indZeros #The population has max individual members in the c code but not here so last item there is zero
