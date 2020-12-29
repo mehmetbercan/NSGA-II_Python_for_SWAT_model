@@ -75,7 +75,7 @@ def CalculateObjectiveFunctions(population):
 # --------------------------------------------------------------------
 # Define NSGA2 Settings
 setting_dict = {'PopSize': 150,
-                'GenNumber': 15,
+                'GenNumber': 20,
                 'CrossPrb': 0.9,
                 'CrossTyp': 2,
                 'Bits': 15,
@@ -126,7 +126,7 @@ while i < TotalNumGenerations:
 
     # plot
     df = nsga2utilities.CreatePopulationDataframe(NSGAII.mate_pop_ptr, NSGAII.parname)
-    df[['f1', 'f2']].plot.scatter('f1','f2', title='Generation {}'.format(i))
+    df[['f1', 'f2']].plot.scatter('f1','f2', title='Generation {}'.format(i+1))
     
     i+=1
 
