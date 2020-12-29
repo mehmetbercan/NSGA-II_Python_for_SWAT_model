@@ -15,18 +15,18 @@ The [SCH problem](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model
   > The 20th Generation from the [SCH.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py>)
  
 ![SCH_Pareto_Deb](./images/SCH_Pareto_Deb.png "SCH_Pareto_Deb")
-  > The SCH problem pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>)
+  > The SCH problem Pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>)
 	
 
 ### ZTD2 Problem
 
-The [ZTD2 problem](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py#L26>) added into the Tests folder. The figure bellow is generated from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py>) script itself.
+The [ZTD2 problem](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py#L26>) added into the Tests folder. The figure bellow is generated from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py>) script itself.
 
 ![ZTD2_Pareto](./images/ZTD2_Pareto.png "ZTD2_Pareto")
-  > The 20th Generation from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/5a484051b352d55123e97c11461588b15cda682b/Tests/SCH.py>)
+  > The 20th Generation from the [ZTD2.py](<https://github.com/mehmetbercan/NSGA-II_Python_for_SWAT_model/blob/26ad8ea880309e43ec1baf9986bf6f2f4716ccf4/Tests/ZTD2.py>)
  
 ![ZTD2_Pareto_Deb](./images/ZTD2_Pareto_Deb.png "ZTD2_Pareto_Deb")
-  > The ZTD2 problem pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>)
+  > The ZTD2 problem Pareto front from [Deb's paper](<https://ieeexplore.ieee.org/document/996017>)
 	
 	
 	
