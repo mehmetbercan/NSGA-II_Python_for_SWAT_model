@@ -4,12 +4,12 @@
 
 ## Introduction
 
-This folder tests the NSGA-II algorithm with problems from [Dr. Deb's paper (2002)](<https://ieeexplore.ieee.org/document/996017>) that are developed for Multi-Objective Optimization.
+This branch differs from the master branch as it is general purpose rather than for only SWAT model. The scripts in the test folder can be used to adopt this algorithm to any other model with few changes. The NSGA-II algorithm with problems from [Dr. Deb's paper (2002)](<https://ieeexplore.ieee.org/document/996017>) are used to verify the Python NSGA-II libraries in this repository. Right now, SCH and ZTD2 (Multi-Objective mathematical problems) with one and thirty parameters used to verify this Python library against the original [paper](<https://ieeexplore.ieee.org/document/996017>) that introduced NSGA-II.
 
 
 ### SCH Problem
 
-The [SCH problem](<./tests/SCH.py#L26>) added into the Tests folder. Reached pareto front in just 20 generation since used Latin Hypercube Sampling (LHS) for the initial population. The figure bellow is generated from the [SCH.py](<./tests/SCH.py>) script itself.
+The [SCH problem](<./tests/SCH.py#L22>) added into the *tests* folder, has two fitness functions and single parameter that ranges from -1000 to 1000. The test script reached pareto front in just 20 generation as Latin Hypercube Sampling (LHS) used for the initial population. The first figure bellow is generated from the test script itself and the second figure is taken from the original NSGA-II paper.
 
 ![SCH_Pareto](./images/SCH_Pareto.png "SCH_Pareto")
   > The 20th Generation from the [SCH.py](<./tests/SCH.py>)
@@ -20,7 +20,7 @@ The [SCH problem](<./tests/SCH.py#L26>) added into the Tests folder. Reached par
 
 ### ZTD2 Problem
 
-The [ZTD2 problem](<./tests/ZTD2.py#L26>) added into the Tests folder. The figure bellow is generated from the [ZTD2.py](<./tests/ZTD2.py>) script itself.
+The [ZTD2 problem](<./tests/ZTD2.py#L22>) added into the *tests* folder, has two fitness functions and thirty parameters that ranges from zero to one. The first figure bellow is generated from the test script itself and the second figure is taken from the original NSGA-II paper.
 
 ![ZTD2_Pareto](./images/ZTD2_Pareto.png "ZTD2_Pareto")
   > The Pareto front from the [ZTD2.py](<./tests/ZTD2.py>)
