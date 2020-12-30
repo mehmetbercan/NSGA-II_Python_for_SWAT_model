@@ -1,8 +1,3 @@
-import os#, sys
-#sys.path.append(os.path.join(os.getcwd(),"SWATnsga2Libs")) #Use this if you do not want to install library
-
-
-
 
 #-------------------------------------------------------------------------------
 # Name:        NSGA-II
@@ -18,6 +13,7 @@ import os#, sys
 
 
 import os
+#sys.path.append(os.path.join(os.getcwd(),"SWATnsga2Libs")) #Use this if you do not want to install library
 from nsga2lib import nsga2, nsga2utilities
 
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -78,7 +74,7 @@ setting_dict = {'PopSize': 150,
                 'GenNumber': 20,
                 'CrossPrb': 0.9,
                 'CrossTyp': 2,
-                'Bits': 15,
+                'Bits': 16,
                 'MutPrb': 0.5,
                 'seed': 0.5,
                 'ObjFuncNum': 2,
