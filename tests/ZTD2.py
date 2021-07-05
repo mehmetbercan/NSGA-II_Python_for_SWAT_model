@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 
 
-import os
+import os, copy, random
 #sys.path.append(os.path.join(os.getcwd(),"SWATnsga2Libs")) #Use this if you do not want to install library
 from nsga2lib import nsga2, nsga2utilities
 
@@ -70,7 +70,7 @@ def CalculateObjectiveFunctions(population):
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 # Define NSGA2 Settings
-setting_dict = {'PopSize': 100,
+setting_dict = {'PopSize': 30,
                 'GenNumber': 250,
                 'CrossPrb': 0.9,
                 'CrossTyp': 2,
@@ -111,11 +111,77 @@ while i < TotalNumGenerations:
     
     #Turn binary calibration parameters into normal numbers
     nsga2utilities.decode(NSGAII.new_pop_ptr, NSGAII.vlen, NSGAII.lim_b); 
+    
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+
+    # check same members of child population / update
+    population = copy.deepcopy(NSGAII.new_pop_ptr)
+    nchrom = len(population["ind"][0]["xbin"])
+
+    popsize = len(population["ind"])
+    ParameterValues=[]
+    for p in range(popsize):
+        ParameterValues.append(population["ind"][p]["xbin"]) 
+    
+    # determine non unique pop members that needs to be updated (if matches two (or more), the last of them stays as unique)
+    isUnique = []
+    matched_indices = []; matched_2_indices = []
+    for p1 in range(popsize):
+        for p2 in range(p1+1, popsize):
+            issame = False
+            if p1 != p2:
+                  issame = all(ParameterValues[p1] == ParameterValues[p2])
+            if issame:
+                matched_indices.append(p1)
+                matched_2_indices.append(p2)
+                break
+        isUnique.append(not issame)
+    indices_4_popmember_that_needs_update = matched_indices # matched_indices is same as [i for i, x in enumerate(isUnique) if x == False]
+    # print ('non-unique replaced: {}'.format(len(indices_4_popmember_that_needs_update)))
+    
+    # update child population if necessary
+    for nonunique_i in indices_4_popmember_that_needs_update:
+        # randomly increase or decrese values 5% of its limit range
+        for p in range(nchrom):
+            par = NSGAII.new_pop_ptr["ind"][nonunique_i]["xbin"][p]
+            if random.randint(0, 1) == 0:
+                par = par + ((NSGAII.lim_b[p][1] - NSGAII.lim_b[p][0]) * 0.05)
+            else:
+                par = par - ((NSGAII.lim_b[p][1] - NSGAII.lim_b[p][0]) * 0.05)
+            #make sure the new value is in parameter value limits
+            if par < NSGAII.lim_b[p][0]:
+                par = NSGAII.lim_b[p][0]
+            if par > NSGAII.lim_b[p][1]:
+                par = NSGAII.lim_b[p][1]
+            NSGAII.new_pop_ptr["ind"][nonunique_i]["xbin"][p] = par
+    
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
 
     
     # calculate fitness
     CalculateObjectiveFunctions(NSGAII.new_pop_ptr);
-    
+
+
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+
+    # put original pop member back in if updated pop member did not improve results (did not generate smaller summed objective function)
+    for p1 in indices_4_popmember_that_needs_update:
+        p2 = matched_2_indices[indices_4_popmember_that_needs_update.index(p1)]
+        sum_fitness1 = sum(NSGAII.new_pop_ptr["ind"][p1]["fitness"])
+        sum_fitness2 = sum(NSGAII.new_pop_ptr["ind"][p2]["fitness"])
+        if sum_fitness1 >= sum_fitness2:
+            NSGAII.new_pop_ptr["ind"][p1] = NSGAII.new_pop_ptr["ind"][p2]
+
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------
+
     # ranking based on calculated objective functions
     nsga2utilities.rankcon(NSGAII.new_pop_ptr);
     
