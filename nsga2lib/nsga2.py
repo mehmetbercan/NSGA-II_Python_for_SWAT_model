@@ -37,6 +37,7 @@ class nsga2:
         M = setting_dict['M']      #Number of Latin Hypercube Sampling intervals
         nfunc = setting_dict['ObjFuncNum'] #Number of Objective Functions
         ReadMFrmOut = setting_dict['ReadMFrmOut'] #1= Read last population from output.out (use "1" when you want to re-start with same parameters defined in parameter file)
+        UniqueParSetSize = 1000 #number of unique parameter set to be saved / used to replace duplicates (default = 1000 - will record last 1000 unique pop members)
 
 
         nchrom=len(para_dict);
@@ -59,6 +60,7 @@ class nsga2:
         self.optype=optype
         self.M=M
         self.ReadMFrmOut=ReadMFrmOut
+        self.UniqueParSetSize=UniqueParSetSize
 
         self.chrom=chrom
         self.nchrom=nchrom
@@ -74,6 +76,7 @@ class nsga2:
         self.old_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
         self.new_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
         self.mate_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
+        self.historic_record={'Parameters':[], 'Fitnesses':[]}
         #/*Initialize the random no generator*/
         self.warmup_random = random_(seed); #
     #-------------------------------------------------------------------------------
@@ -118,6 +121,7 @@ class nsga2:
             shutil.copy2(self.Modeldir+"/NSGA2.OUT/output.out", self.Modeldir+"/NSGA2.OUT/output_previous.out")            
             #/*Function Calculaiton*/
             CalculateObjectiveFunctions(old_pop_ptr)
+            self.Record_Unique_Population_Sets(old_pop_ptr)
         else:
             #Defining Latin Hypercube Sampling population
             InitialLHSpop = nsga2utilities.CreateDefaultPopulation(self.M,self.chrom,self.nchrom,self.nfunc)
@@ -139,6 +143,7 @@ class nsga2:
                     InitialLHSpop["ind"][i]["xbin"][j] = LHSamples[j][rndinteger]         
             #/*Function Calculaiton*/
             CalculateObjectiveFunctions(InitialLHSpop)
+            self.Record_Unique_Population_Sets(InitialLHSpop)
             #Select the first population from InitialLHSpop
             n=0
             for rank in range(1,self.M+1):
@@ -155,7 +160,77 @@ class nsga2:
         nsga2utilities.rankcon(old_pop_ptr)
         self.old_pop_ptr=old_pop_ptr
     #-------------------------------------------------------------------------------
+    
+    #-------------------------------------------------------------------------------
+    def Record_Unique_Population_Sets(self, population):
+        # check non-unique members of child population / update
+        ParameterValues=[]; Objectives=[]
+        for p in range(self.popsize):
+            ParameterValues.append(copy.deepcopy(population["ind"][p]["xbin"])) 
+            Objectives.append(copy.deepcopy(population["ind"][p]["fitness"])) 
+        
+        # determine non unique pop members 
+        isUnique = []
+        for p1 in range(self.popsize):
+            for p2 in range(p1+1, self.popsize):
+                issame = False
+                if p1 != p2:
+                    issame = all(ParameterValues[p1] == ParameterValues[p2])
+                if issame:
+                    break
+            isUnique.append(not issame)
+        Unique_indices = [i for i, x in enumerate(isUnique) if x == True]
 
+        for p in Unique_indices:
+            self.historic_record['Parameters'].append(ParameterValues[p])
+            self.historic_record['Fitnesses'].append(Objectives[p])
+    #-------------------------------------------------------------------------------
+    
+    #-------------------------------------------------------------------------------
+    def Update_nonUnique_childpop_members(self):
+        population = copy.deepcopy(self.new_pop_ptr)
+
+        # check non-unique members of child population / update
+        ParameterValues=[]; 
+        for p in range(self.popsize):
+            ParameterValues.append(population["ind"][p]["xbin"])
+        
+        # determine non unique pop members 
+        matched_indices = []; matched_2_indices = []
+        matched_indices_historic = []; matched_2_indices_historic = []
+        historic_ParameterValues = self.historic_record['Parameters']
+        for p1 in range(self.popsize):
+            for p2 in range(len(historic_ParameterValues)):
+                issame = False
+                if p1 != p2:
+                    issame = all(ParameterValues[p1] == historic_ParameterValues[p2])
+                if issame:
+                    matched_indices_historic.append(p1)
+                    matched_2_indices_historic.append(p2)
+                    break
+            if not issame:
+                for p2 in range(p1+1, self.popsize):
+                    issame = False
+                    if p1 != p2:
+                        issame = all(ParameterValues[p1] == ParameterValues[p2])
+                    if issame:
+                        matched_indices.append(p1)
+                        matched_2_indices.append(p2)
+                        break
+
+        indices_4_popmember_that_needs_update = matched_indices + matched_indices_historic
+        
+        # update child population if necessary
+        for nonunique_i in indices_4_popmember_that_needs_update:
+            # randomly change one parameter
+            par_2_change_index = random.randint(0, self.nchrom-1)
+            upper_threshold = self.lim_b[par_2_change_index][1]
+            lower_threshold = self.lim_b[par_2_change_index][0]
+            random_par_value = random.uniform(lower_threshold, upper_threshold)
+            self.new_pop_ptr["ind"][nonunique_i]["xbin"][par_2_change_index] = random_par_value
+
+        return matched_indices, matched_2_indices, matched_indices_historic, matched_2_indices_historic
+    #-------------------------------------------------------------------------------
 
     #-------------------------------------------------------------------------------
     def CreateChildPopulation(self):
