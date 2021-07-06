@@ -12,9 +12,11 @@
 #-------------------------------------------------------------------------------
 
 
-import os, copy, random
+import os, copy
 #sys.path.append(os.path.join(os.getcwd(),"SWATnsga2Libs")) #Use this if you do not want to install library
 from nsga2lib import nsga2, nsga2utilities
+
+import pandas as pd
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 
@@ -117,6 +119,7 @@ while i < TotalNumGenerations:
     # -------------------------------------------------------------------------------------
     # update non unique child population (new_pop_ptr) members
     matched_indices, matched_2_indices, matched_indices_historic, matched_2_indices_historic = NSGAII.Update_nonUnique_childpop_members()
+    print (len(matched_indices), len(matched_indices_historic))
     # -------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------
     # -------------------------------------------------------------------------------------
@@ -160,6 +163,11 @@ while i < TotalNumGenerations:
         df[['f1', 'f2']].plot.scatter('f1','f2', title='Generation {}'.format(i+1), figsize=(6.5,6))
     
     i+=1
+    
+# plot last 1000 unique historic recorded set
+df_=pd.DataFrame({'f1': [val[0] for val in NSGAII.historic_record['Fitnesses']], 
+                  'f2': [val[1] for val in NSGAII.historic_record['Fitnesses']]})
+df_.plot.scatter('f1','f2', figsize=(6.5,6),title='Last 1000 unique set', alpha=0.5)
 
 
 print("The NSGA-II execution finished. Look at the results in NSGA2.OUT folder.");

@@ -61,6 +61,7 @@ class nsga2:
         self.M=M
         self.ReadMFrmOut=ReadMFrmOut
         self.UniqueParSetSize=UniqueParSetSize
+        self.UniqueParSetSize_i=0
 
         self.chrom=chrom
         self.nchrom=nchrom
@@ -76,7 +77,8 @@ class nsga2:
         self.old_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
         self.new_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
         self.mate_pop_ptr=nsga2utilities.CreateDefaultPopulation(self.popsize,self.chrom,self.nchrom,self.nfunc)
-        self.historic_record={'Parameters':[], 'Fitnesses':[]}
+        self.historic_record={'Parameters':[numpy.zeros(self.nchrom,float) for x in range(self.UniqueParSetSize)],
+                                 'Fitnesses':[numpy.zeros(self.nchrom,float) for x in range(self.UniqueParSetSize)]}
         #/*Initialize the random no generator*/
         self.warmup_random = random_(seed); #
     #-------------------------------------------------------------------------------
@@ -182,8 +184,11 @@ class nsga2:
         Unique_indices = [i for i, x in enumerate(isUnique) if x == True]
 
         for p in Unique_indices:
-            self.historic_record['Parameters'].append(ParameterValues[p])
-            self.historic_record['Fitnesses'].append(Objectives[p])
+            self.historic_record['Parameters'][self.UniqueParSetSize_i] = ParameterValues[p]
+            self.historic_record['Fitnesses'][self.UniqueParSetSize_i] = Objectives[p]
+            self.UniqueParSetSize_i += 1
+            if self.UniqueParSetSize_i >= self.UniqueParSetSize:
+                self.UniqueParSetSize_i = 0
     #-------------------------------------------------------------------------------
     
     #-------------------------------------------------------------------------------
